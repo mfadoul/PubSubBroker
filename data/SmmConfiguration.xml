@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<smm>
+	<connections>
+		<!-- This will bind to: ipc:///tmp/smmPublisherEndpoint and ipc:///tmp/smmSubscriberEndpoint -->
+		<broker name="local" transport="ipc">
+			<publisherEndpoint>/tmp/smmPublisherEndpoint</publisherEndpoint>
+			<subscriberEndpoint>/tmp/smmSubscriberEndpoint</subscriberEndpoint>
+		</broker>
+
+		<!-- This will bind to: tcp://*:6000 and tcp://*:6001 -->
+		<broker name="remote" transport="tcp">
+			<publisherEndpoint>*:6000</publisherEndpoint>
+			<subscriberEndpoint>*:6001</subscriberEndpoint>
+		</broker>
+		
+		<remoteBroker>
+		</remoteBroker>
+	</connections>
+		
+	
+	<staff id="1001">
+		<firstname>yong</firstname>
+		<lastname>mook kim</lastname>
+		<nickname>mkyong</nickname>
+		<salary>100000</salary>
+	</staff>
+	<staff id="2001">
+		<firstname>low</firstname>
+		<lastname>yin fong</lastname>
+		<nickname>fong fong</nickname>
+		<salary>200000</salary>
+	</staff>
+</company>
