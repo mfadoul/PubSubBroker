@@ -4,11 +4,6 @@ Author: Matthew Fadoul
 E-mail: matthew.fadoul@gmail.com
 
 ----------------------------------
-Tasks
-1) Create a mechanism to launch with a configuration file.
-2) Create adapter for SMM-functionality to use ZeroMQ.
-
-----------------------------------
 Configuration Data:
 
 1) Publisher Port(2)
