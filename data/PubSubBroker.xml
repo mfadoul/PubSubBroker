@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<pubSubBroker>
+
+	<!-- Launch this broker with the specified endpoints. -->
+
+	<brokers>
+		<!-- This will bind to: ipc:///tmp/smmPublisherEndpoint and ipc:///tmp/smmSubscriberEndpoint -->
+		<broker name="localToMachine" transport="ipc">
+			<publisherEndpoint>/tmp/smmPublisherEndpoint</publisherEndpoint>
+			<subscriberEndpoint>/tmp/smmSubscriberEndpoint</subscriberEndpoint>
+		</broker>
+
+		<!-- This will bind to: tcp://*:6000 and tcp://*:6001 -->
+		<broker name="tcpBased" transport="tcp">
+			<publisherEndpoint>*:6000</publisherEndpoint>
+			<subscriberEndpoint>*:6001</subscriberEndpoint>
+		</broker>
+	</brokers>
+	
+	<!-- Connect to this broker to other brokers that are already running. -->
+	<connections>
+		<connection name="existingBroker">
+			<publisherEndpoint>tcp://localhost:16000</publisherEndpoint>
+			<subscriberEndpoint>tcp://localhost:16001</subscriberEndpoint>			
+		</connection>
+	</connections>
+</pubSubBroker>
