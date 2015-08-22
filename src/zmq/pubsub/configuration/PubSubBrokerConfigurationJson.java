@@ -11,72 +11,58 @@ import com.google.gson.stream.JsonReader;
 public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration {
 
 	public PubSubBrokerConfigurationJson(InputStream jsonInputStream) {
-		JsonReader reader = null;
-		this.brokerName = null;
-		this.brokerBindings = new ArrayList<BrokerConfiguration>();
-		this.brokerConnections = new ArrayList<BrokerConfiguration>();
-
+		JsonReader jsonReader = null;
+		
+		String tempBrokerName = null;
+		List<BrokerConfiguration> tempBrokerBindings = new ArrayList<BrokerConfiguration>();
+		List<BrokerConfiguration> tempBrokerConnections = new ArrayList<BrokerConfiguration>();
+		
 		try {
-			reader = new JsonReader(new InputStreamReader(jsonInputStream, "UTF-8"));
+			jsonReader = new JsonReader(new InputStreamReader(jsonInputStream, "UTF-8"));
 			// Read the name in the pubsubbroker
-			reader.beginObject();
-			while (reader.hasNext()) {
-				String fieldName = reader.nextName();
-				System.out.println("Name = " + fieldName);
-				if ("pubSubBroker".equals(fieldName)) {
-					System.out.println("Found the pubSubBroker Object");
-					readPubSubBrokerConfiguration(reader);
+			jsonReader.beginObject();
+			while (jsonReader.hasNext()) {
+				String name = jsonReader.nextName();
+				if ("name".equals(name)) {
+					tempBrokerName = jsonReader.nextString();
+					System.out.println("Name of the broker = " + tempBrokerName);
+					
+				} else if ("brokerBindings".equals(name)) {
+					// Found brokerBindings
+					jsonReader.beginArray();
+					while (jsonReader.hasNext()) {
+						BrokerConfiguration brokerConfiguration = readBrokerConfiguration(jsonReader);
+						if (brokerConfiguration != null) {
+							tempBrokerBindings.add(brokerConfiguration);
+						}
+					}
+					jsonReader.endArray();
+				} else if ("brokerConnections".equals(name)) {
+					// Found brokerConnections
+					jsonReader.beginArray();
+					while (jsonReader.hasNext()) {
+						BrokerConfiguration brokerConfiguration = readBrokerConfiguration(jsonReader);
+						if (brokerConfiguration != null) {
+							tempBrokerConnections.add(brokerConfiguration);
+						}
+					}
+					jsonReader.endArray();
 				} else {
-					System.out.println ("Skipping " + fieldName);
-					reader.skipValue();
+					// Mismatch
 				}
 			}
-			reader.close();
+			jsonReader.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		this.brokerName = tempBrokerName;
+		this.brokerBindings = tempBrokerBindings;
+		this.brokerConnections = tempBrokerConnections;
+
 		System.out.println("Broker Name = " + brokerName);
 		System.out.println("Number of brokerBindings = " + brokerBindings.size());
 		System.out.println("Number of brokerConnections = " + brokerConnections.size());
-	}
-
-	private void readPubSubBrokerConfiguration(JsonReader jsonReader) throws IOException {
-		// Read the broker
-		jsonReader.beginObject();  // Begin pubSubBroker
-		
-		while (jsonReader.hasNext()) {
-			String name = jsonReader.nextName();
-			if ("name".equals(name)) {
-				this.brokerName = jsonReader.nextString();
-				System.out.println("Name of the broker = " + this.brokerName);
-				
-			} else if ("brokerBindings".equals(name)) {
-				// Found brokerBindings
-				jsonReader.beginArray();
-				while (jsonReader.hasNext()) {
-					BrokerConfiguration brokerConfiguration = readBrokerConfiguration(jsonReader);
-					if (brokerConfiguration != null) {
-						brokerBindings.add(brokerConfiguration);
-					}
-				}
-				jsonReader.endArray();
-			} else if ("brokerConnections".equals(name)) {
-				// Found brokerConnections
-				jsonReader.beginArray();
-				while (jsonReader.hasNext()) {
-					BrokerConfiguration brokerConfiguration = readBrokerConfiguration(jsonReader);
-					if (brokerConfiguration != null) {
-						brokerConnections.add(brokerConfiguration);
-					}
-				}
-				jsonReader.endArray();
-			} else {
-				// Mismatch
-			}
-		}
-		jsonReader.endObject();  // End pubSubBroker
-
 	}
 
 	private BrokerConfiguration readBrokerConfiguration(JsonReader jsonReader) throws IOException {
@@ -134,12 +120,14 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 		return brokerConnections.get(index);
 	}
 
-	private String brokerName;
-	private List<BrokerConfiguration> brokerBindings;
-	private List<BrokerConfiguration> brokerConnections;
 	@Override
 	public String toString() {
 		return "PubSubBrokerConfigurationJson [brokerName=" + brokerName + ", brokerBindings=" + brokerBindings
 				+ ", brokerConnections=" + brokerConnections + "]";
 	}
+	
+	// Members
+	private final String brokerName;
+	private final List<BrokerConfiguration> brokerBindings;
+	private final List<BrokerConfiguration> brokerConnections;
 }

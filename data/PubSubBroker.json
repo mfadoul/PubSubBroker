@@ -1,27 +1,24 @@
 {
-    "pubSubBroker": 
-    {
-       "name": "Main Broker",
-       "brokerBindings": 
-       [
-	       {
-	           "name": "localToMachine", 
-	           "publisherEndpoint": "ipc:///tmp/smmPublisherEndpoint", 
-	           "subscriberEndpoint": "ipc:///tmp/smmSubscriberEndpoint"
-	        },
-	        {
-	            "name": "tcpBased", 
-	            "publisherEndpoint": "tcp://*:6000", 
-	            "subscriberEndpoint": "tcp://*:6001"
-	        }
-        ],
-        "brokerConnections": 
-        [
-            {
-                "name": "existingBrokerConnection", 
-                "publisherEndpoint": "tcp://localhost:16000", 
-                "subscriberEndpoint": "tcp://localhost:16001"
-            }
-        ]
-	}
+   "name": "Main Broker",
+   "brokerBindings": 
+   [
+       {
+           "name": "localToMachine", 
+           "publisherEndpoint": "ipc:///tmp/smmPublisherEndpoint", 
+           "subscriberEndpoint": "ipc:///tmp/smmSubscriberEndpoint"
+        },
+        {
+            "name": "tcpBased", 
+            "publisherEndpoint": "tcp://*:6000", 
+            "subscriberEndpoint": "tcp://*:6001"
+        }
+    ],
+    "brokerConnections": 
+    [
+        {
+            "name": "existingBrokerConnection", 
+            "publisherEndpoint": "tcp://localhost:16000", 
+            "subscriberEndpoint": "tcp://localhost:16001"
+        }
+    ]
 }
