@@ -1,62 +1,59 @@
 package zmq.pubsub;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Context;
 import org.zeromq.ZMQ.Socket;
 
+import zmq.pubsub.configuration.BrokerConnection;
+import zmq.pubsub.configuration.PubSubBrokerConfiguration;
+import zmq.pubsub.configuration.PubSubBrokerConfigurationJson;
+import zmq.pubsub.configuration.PubSubBrokerConfigurationSimple;
+
 public class Broker {
 
 	public Broker(int xpubPort, int xsubPort) {
-		Context context = ZMQ.context(1);
 		
-		this.xpubPort = xpubPort;
-		this.xsubPort = xsubPort;
+		this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationSimple(xpubPort, xsubPort);
 		
-		this.xpubSocket = context.socket(ZMQ.XPUB);
-		this.xsubSocket = context.socket(ZMQ.XSUB);
 	}
 
-	public Broker(String configFilename) {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db;
-		try {
-			System.out.println("Parsing configuration file.");
-			db = dbf.newDocumentBuilder();
-			Document doc = db.parse(new File(configFilename));
-			
-			NodeList nodeList = doc.getElementsByTagName("broker");
-			System.out.println("Number of brokers in configuration file = " + nodeList.getLength());
-			
-			for (int i=0; i < nodeList.getLength(); ++i) {
-				Node node = nodeList.item(i);
-				System.out.println ("Broker node: " + node.getAttributes().getNamedItem("name"));
-			}
-		} catch (ParserConfigurationException e) {
-			System.err.println("Unable to parse configuration file.");
-			e.printStackTrace();
-		} catch (SAXException e) {
-			System.err.println("SAX Exception when parsing configuration file.");
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.err.println("IO Exception when parsing configuration file.");
-			e.printStackTrace();
-		} 
+	public Broker(String configFilename) throws FileNotFoundException {
+		File initialFile = new File(configFilename);
+		InputStream inputStream;
+
+		inputStream = new FileInputStream(initialFile);
+		this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationJson(inputStream);
+		System.out.println("pubSubBroker object = " + this.pubSubBrokerConfiguration);		
 	}
 	
 	public boolean initialize () {
-		this.xpubSocket.bind("tcp://*:" + xpubPort);
-		this.xsubSocket.bind("tcp://*:" + xsubPort);
+		
+		Context context = ZMQ.context(1);
+		this.xpubSocket = context.socket(ZMQ.XPUB);
+		this.xsubSocket = context.socket(ZMQ.XSUB);		
+
+		System.out.println("Initializing Broker [" + this.pubSubBrokerConfiguration.getName() + "]");
+		for (int index = 0; index < this.pubSubBrokerConfiguration.getBrokerBindingsCount(); ++index) {
+			BrokerConnection brokerConnection = this.pubSubBrokerConfiguration.getBrokerBinding(index);
+			
+			// Please note: 
+			// The "XSUB" is bound to the publisher endpoint(s).
+			// The "XPUB" is bound to the subscriber endpoint(s).
+			// This may appear a bit non-intuitive, but the XSUB is subscribing to the publishers,
+			// while the XPUB is publishing to the subscribers.
+			// For more information, see: http://zguide.zeromq.org/php:chapter2#toc13
+			
+			System.out.println("Publisher Socket: Binding to " + brokerConnection.getPublisherEndpoint());
+			this.xsubSocket.bind(brokerConnection.getPublisherEndpoint());
+			
+			System.out.println("Subscriber Socket: Binding to " + brokerConnection.getSubscriberEndpoint());
+			this.xpubSocket.bind(brokerConnection.getSubscriberEndpoint());
+		}
 		
 		// Note: ZeroMQ doesn't care which socket is associated with the "frontend" vs. "backend".
 		ZMQ.proxy(xsubSocket, xpubSocket, null);
@@ -72,40 +69,64 @@ public class Broker {
 	
 	private Socket xpubSocket = null;
 	private Socket xsubSocket = null;
-	
-	private int xpubPort = 0;
-	private int xsubPort = 0;
-	
+		
 	private boolean initialized = false;
+	
+	// Broker Configuration
+	final PubSubBrokerConfiguration pubSubBrokerConfiguration;
 	
     public static void main (String [] args) {
     	Broker broker = null;
-    	
-    	int xpubPort = 5555; // Default value
-    	int xsubPort = 5556; // Default value
-    	
+    	    	
     	System.out.println("Number of args = " + args.length);
-    	if (args.length>=2) {
+    	
+    	switch (args.length) {
+    	case 0:
+    		// Use default configuration file
     		try {
-				xpubPort = Integer.parseInt(args[0]);
-				xsubPort = Integer.parseInt(args[1]);
+    			broker = new Broker("data/PubSubBroker.json");
+    		} catch (FileNotFoundException e) {
+    			e.printStackTrace();
+    		}
+    		break;
+    	case 1:
+    		// Configuration file specified
+    		try {
+    			broker = new Broker(args[0]);
+    		} catch (FileNotFoundException e) {
+    			e.printStackTrace();
+    		}
+    		break;
+
+    	case 2:
+    		// Ports specified
+    		try {
+				int xpubPort = Integer.parseInt(args[0]);
+				int xsubPort = Integer.parseInt(args[1]);
+				
+		    	System.out.println("xpubPort = " + xpubPort);
+		    	System.out.println("xsubPort = " + xsubPort);
+		    	
+		    	broker = new Broker(xpubPort, xsubPort);
 			} catch (NumberFormatException e) {
 				System.err.println("Unable to parse ports on the command line.");
 				System.exit(1);
 			}
-    		
+    		break;
+   		default:
+   			// Mismatch.  Help
+   			System.err.println ("Commandline parameters not recognized.");
+    		break;
     	}
     	
-    	System.out.println("xpubPort = " + xpubPort);
-    	System.out.println("xsubPort = " + xsubPort);
-    	
-    	// broker = new Broker(xpubPort, xsubPort);
-    	broker = new Broker("data/PubSubBroker.xml");
-    	System.out.println("Initializing broker.");
-    	
-    	broker.initialize();
-    	System.out.println("After initialization of broker.");
-    	
+    	if (broker != null) {
+        	System.out.println("Initializing broker.");
+	    	broker.initialize();
+	    	System.out.println("After initialization of broker.");
+    	} else {
+    		System.err.println("Couldn't create Broker object");
+    	}
     }
 
 }
+

@@ -12,14 +12,19 @@ public class SimplePublisherTest {
 
 	public static int messageCount = 0;
 	public static Random random = new Random(System.nanoTime());
+	
+	public static String zmqEndpointIpc = "ipc:///tmp/smmPublisherEndpoint";
+	public static String zmqEndpointTcp = "tcp://127.0.0.1:6000";
+	
+	// Choose an endpoint here
+	public static String zmqEndpoint = zmqEndpointIpc;
+
 
 	public SimplePublisherTest() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public static void main(String[] args) {
-		String zmqEndpoint = "tcp://127.0.0.1:5556";
-		
 		System.out.println("This is a simple publisher test");
 		
 		ZMQ.Context context = ZMQ.context (1);
@@ -30,7 +35,7 @@ public class SimplePublisherTest {
 		while (true) {
 			sendMessage(publisherSocket);
 			try {
-				Thread.sleep(100);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -48,7 +53,7 @@ public class SimplePublisherTest {
 		
 		Date date = new java.util.Date();
 		
-		String messageContents = Integer.toString(messageCount) + ", Time = " + date.toString();
+		String messageContents = Integer.toString(messageCount) + ", Time = " + date.toString() + ", Published to [" + zmqEndpoint + "]";
 		
 		//socket.send(messageHeader, ZMQ.SNDMORE);
 		socket.send(MessageUtils.intToByteArray(messageId), ZMQ.SNDMORE);

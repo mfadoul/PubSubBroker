@@ -4,13 +4,13 @@ Author: Matthew Fadoul
 E-mail: matthew.fadoul@gmail.com
 
 ----------------------------------
-Configuration Data:
+Default Configuration Data:
 
 1) Publisher Port(2)
-  * publisherPort = 5556
+  * publisherPort = 6000
   
 2) Subscriber Port(s)
-  * subscriberPort = 5555
+  * subscriberPort = 6001
 
 3) Messages
   

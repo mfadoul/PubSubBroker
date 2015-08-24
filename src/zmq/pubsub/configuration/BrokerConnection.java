@@ -1,7 +1,7 @@
 package zmq.pubsub.configuration;
 
-public class BrokerConfiguration {
-	public BrokerConfiguration(String name, String publisherEndpoint, String subscriberEndpoint) {
+public class BrokerConnection {
+	public BrokerConnection(String name, String publisherEndpoint, String subscriberEndpoint) {
 		super();
 		this.name = name;
 		this.publisherEndpoint = publisherEndpoint;
@@ -25,7 +25,7 @@ public class BrokerConfiguration {
 	
 	@Override
 	public String toString() {
-		return "BrokerConfiguration [name=" + name + ", publisherEndpoint=" + publisherEndpoint
+		return "BrokerConnection [name=" + name + ", publisherEndpoint=" + publisherEndpoint
 				+ ", subscriberEndpoint=" + subscriberEndpoint + "]";
 	}
 }

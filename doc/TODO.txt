@@ -1,4 +1,4 @@
 Tasks
-1) Create a mechanism to launch with a configuration file.
+1) Create a mechanism to launch with an XML configuration file.
 2) Create adapter for SMM-functionality to use ZeroMQ.
-
+3) Build more unit tests.

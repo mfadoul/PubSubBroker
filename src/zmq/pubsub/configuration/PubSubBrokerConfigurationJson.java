@@ -14,8 +14,8 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 		JsonReader jsonReader = null;
 		
 		String tempBrokerName = null;
-		List<BrokerConfiguration> tempBrokerBindings = new ArrayList<BrokerConfiguration>();
-		List<BrokerConfiguration> tempBrokerConnections = new ArrayList<BrokerConfiguration>();
+		List<BrokerConnection> tempBrokerBindings = new ArrayList<BrokerConnection>();
+		List<BrokerConnection> tempBrokerConnections = new ArrayList<BrokerConnection>();
 		
 		try {
 			jsonReader = new JsonReader(new InputStreamReader(jsonInputStream, "UTF-8"));
@@ -31,17 +31,17 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 					// Found brokerBindings
 					jsonReader.beginArray();
 					while (jsonReader.hasNext()) {
-						BrokerConfiguration brokerConfiguration = readBrokerConfiguration(jsonReader);
+						BrokerConnection brokerConfiguration = readBrokerConfiguration(jsonReader);
 						if (brokerConfiguration != null) {
 							tempBrokerBindings.add(brokerConfiguration);
 						}
 					}
 					jsonReader.endArray();
-				} else if ("brokerConnections".equals(name)) {
-					// Found brokerConnections
+				} else if ("brokerExternalConnections".equals(name)) {
+					// Found brokerExternalConnections
 					jsonReader.beginArray();
 					while (jsonReader.hasNext()) {
-						BrokerConfiguration brokerConfiguration = readBrokerConfiguration(jsonReader);
+						BrokerConnection brokerConfiguration = readBrokerConfiguration(jsonReader);
 						if (brokerConfiguration != null) {
 							tempBrokerConnections.add(brokerConfiguration);
 						}
@@ -58,14 +58,14 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 		}
 		this.brokerName = tempBrokerName;
 		this.brokerBindings = tempBrokerBindings;
-		this.brokerConnections = tempBrokerConnections;
+		this.brokerExternalConnections = tempBrokerConnections;
 
 		System.out.println("Broker Name = " + brokerName);
 		System.out.println("Number of brokerBindings = " + brokerBindings.size());
-		System.out.println("Number of brokerConnections = " + brokerConnections.size());
+		System.out.println("Number of brokerExternalConnections = " + brokerExternalConnections.size());
 	}
 
-	private BrokerConfiguration readBrokerConfiguration(JsonReader jsonReader) throws IOException {
+	private BrokerConnection readBrokerConfiguration(JsonReader jsonReader) throws IOException {
 		String nameString = null;
 		String publisherEndpointString = null;
 		String subscriberEndpointString = null;
@@ -87,7 +87,7 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 		jsonReader.endObject();
 
 		if ((nameString != null) && publisherEndpointString != null && subscriberEndpointString != null) {
-			return new BrokerConfiguration(nameString, publisherEndpointString, subscriberEndpointString);
+			return new BrokerConnection(nameString, publisherEndpointString, subscriberEndpointString);
 		} else {
 			System.err.println("Error inside the Broker Configuration Reader");
 		}
@@ -106,28 +106,28 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 	}
 
 	@Override
-	public BrokerConfiguration getBrokerBinding(int index) {
+	public BrokerConnection getBrokerBinding(int index) {
 		return brokerBindings.get(index);
 	}
 
 	@Override
-	public int getBrokerConnectionCount() {
-		return brokerConnections.size();
+	public int getBrokerExternalConnectionCount() {
+		return brokerExternalConnections.size();
 	}
 
 	@Override
-	public BrokerConfiguration getBrokerConnection(int index) {
-		return brokerConnections.get(index);
+	public BrokerConnection getBrokerExternalConnection(int index) {
+		return brokerExternalConnections.get(index);
 	}
 
 	@Override
 	public String toString() {
 		return "PubSubBrokerConfigurationJson [brokerName=" + brokerName + ", brokerBindings=" + brokerBindings
-				+ ", brokerConnections=" + brokerConnections + "]";
+				+ ", brokerExternalConnections=" + brokerExternalConnections + "]";
 	}
 	
 	// Members
 	private final String brokerName;
-	private final List<BrokerConfiguration> brokerBindings;
-	private final List<BrokerConfiguration> brokerConnections;
+	private final List<BrokerConnection> brokerBindings;
+	private final List<BrokerConnection> brokerExternalConnections;
 }

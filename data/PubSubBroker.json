@@ -2,7 +2,7 @@
    "name": "Main Broker",
    "brokerBindings": 
    [
-       {
+        {
            "name": "localToMachine", 
            "publisherEndpoint": "ipc:///tmp/smmPublisherEndpoint", 
            "subscriberEndpoint": "ipc:///tmp/smmSubscriberEndpoint"
@@ -13,7 +13,7 @@
             "subscriberEndpoint": "tcp://*:6001"
         }
     ],
-    "brokerConnections": 
+    "brokerExternalConnections": 
     [
         {
             "name": "existingBrokerConnection", 
