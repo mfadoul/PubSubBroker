@@ -53,7 +53,6 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 			}
 			jsonReader.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.brokerName = tempBrokerName;

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<pubSubBroker>
+<pubSubBroker name="Main Broker">
 	<!-- Launch this broker with the specified endpoints. -->
 	<brokerBindings>
 		<connection name="localToMachine" 
 		        publisherEndpoint="ipc:///tmp/smmPublisherEndpoint" 
 		        subscriberEndpoint="ipc:///tmp/smmSubscriberEndpoint"/>
 		<connection name="tcpBased" 
-		        publisherEndpoint="tcp://localhost:6000" 
-		        subscriberEndpoint="tcp://localhost:6001"/>
+		        publisherEndpoint="tcp://*:6000" 
+		        subscriberEndpoint="tcp://*:6001"/>
 	</brokerBindings>
 		
 	<!-- Connect to this broker to other brokers that are already running. -->

@@ -33,9 +33,16 @@ public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 			Document doc = db.parse(new File(configFilename));
 	
 			// TODO: Finish XML support!
-			
+			// Find the name of the pub sub broker
+			try {
+				Node pubSubBrokerNode = doc.getElementsByTagName("pubSubBroker").item(0);
+				tempBrokerName=pubSubBrokerNode.getAttributes().getNamedItem("name").getNodeValue();
+			} catch (NullPointerException e) {
+				System.err.println("NPE: Couldn't set tempBrokerName");
+			}
 			// Find brokerBindings
 			NodeList brokerBindingsTempList = doc.getElementsByTagName("brokerBindings");
+			
 			if (brokerBindingsTempList.getLength() > 0) {
 				Node brokerBindingsNode = brokerBindingsTempList.item(0);
 				System.out.println("brokerBindingsNode (toString) = " + brokerBindingsNode);
@@ -44,7 +51,7 @@ public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 				System.out.println("Expected number of broker bindings = " + brokerBindingsNodeList.getLength());
 
 				for (int i = 0; i < brokerBindingsNodeList.getLength(); ++i) {
-					if ("brokerBindings".equals(brokerBindingsNodeList.item(i).getLocalName())) {
+					if ("connection".equals(brokerBindingsNodeList.item(i).getNodeName())) {
 						BrokerConnection brokerConfiguration = this.readBrokerConfiguration(brokerBindingsNodeList.item(i));
 						if (brokerConfiguration != null) {
 							tempBrokerBindings.add(brokerConfiguration);
@@ -62,9 +69,11 @@ public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 				System.out.println("Expected number of brokerExternalConnections = " + brokerExternalConnectionsNodeList.getLength());
 
 				for (int j = 0; j < brokerExternalConnectionsNodeList.getLength(); ++j) {
-					BrokerConnection brokerConfiguration = this.readBrokerConfiguration(brokerExternalConnectionsNodeList.item(j));
-					if (brokerConfiguration != null) {
-						tempBrokerConnections.add(brokerConfiguration);
+					if ("connection".equals(brokerExternalConnectionsNodeList.item(j).getNodeName())) {
+						BrokerConnection brokerConfiguration = this.readBrokerConfiguration(brokerExternalConnectionsNodeList.item(j));
+						if (brokerConfiguration != null) {
+							tempBrokerConnections.add(brokerConfiguration);
+						}
 					}
 				}				
 			}
