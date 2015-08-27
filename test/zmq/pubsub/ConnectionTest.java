@@ -1,4 +1,4 @@
-package zmq.pubsub.test;
+package zmq.pubsub;
 
 import static org.junit.Assert.*;
 
@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.zeromq.ZMQ;
-
-import zmq.pubsub.Connection;
 
 public class ConnectionTest {
 
@@ -162,7 +160,6 @@ public class ConnectionTest {
 
 	@Test
 	public final void testZmqVersion() {
-		
 		assertTrue(ZMQ.getMajorVersion()>=0);
 		assertTrue(ZMQ.getMinorVersion()>=0);
 		assertNotNull(ZMQ.getVersionString());

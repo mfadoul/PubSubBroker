@@ -44,6 +44,4 @@ public class Connection {
 	// Contents
 	private String name;
 	private final Set<Integer> messageIds=new HashSet<Integer>();
-	
-	
 }

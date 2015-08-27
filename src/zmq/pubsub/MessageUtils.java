@@ -30,5 +30,4 @@ public class MessageUtils {
 	    bb.putInt(i);
 	    return bb.array();
 	}
-
 }

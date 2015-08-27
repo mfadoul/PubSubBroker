@@ -37,5 +37,4 @@ public enum Command {
 	public int getId () {
 		return id;
 	}
-
 }

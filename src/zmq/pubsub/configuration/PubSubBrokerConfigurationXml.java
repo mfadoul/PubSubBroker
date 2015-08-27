@@ -18,7 +18,6 @@ import java.util.List;
 
 public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 
-	// TODO: Complete this XML config file parser
 	public PubSubBrokerConfigurationXml(String configFilename) {
 		 // Add a handler for XML files.
 		String tempBrokerName = "Broker";
@@ -32,7 +31,6 @@ public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 			db = dbf.newDocumentBuilder();
 			Document doc = db.parse(new File(configFilename));
 	
-			// TODO: Finish XML support!
 			// Find the name of the pub sub broker
 			try {
 				Node pubSubBrokerNode = doc.getElementsByTagName("pubSubBroker").item(0);
@@ -126,7 +124,7 @@ public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 
 	@Override
 	public int getBrokerBindingsCount() {
-		return brokerBindings.size();
+		return brokerBindings.size();		
 	}
 
 	@Override

@@ -8,5 +8,4 @@ public abstract class Message {
 	
 	// Private contents
 	int messageId;
-
 }
