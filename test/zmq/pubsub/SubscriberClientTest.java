@@ -24,7 +24,7 @@ public class SubscriberClientTest {
 
 	@Before
 	public void setUp() throws Exception {
-		connection = new SubscriberClient(this.connectionName);
+		subscriberClientSimple = new SubscriberClientSimple(this.subscriberEndpointTcp);
 	}
 
 	@After
@@ -32,25 +32,25 @@ public class SubscriberClientTest {
 	}
 
 	@Test
-	public final void testConnection() {
-		SubscriberClient connection2=null;
+	public final void testSubscriberClient() {
+		SubscriberClient subscriberClient=null;
 		
-		connection2 = new SubscriberClient("Temp");
-		assertNotNull(connection2);
+		subscriberClient = new SubscriberClientSimple(subscriberEndpointTcp);
+		assertNotNull(subscriberClient);
 	}
 
 	@Test
-	public final void testGetName() {
+	public final void testGetSubscriberEndpoint() {
 
-		assertTrue(this.connectionName.equals(connection.getName()));
+		assertTrue(this.subscriberEndpointTcp.equals(subscriberClientSimple.getSubscriberEndpoint()));
 	}
 
 	@Test
 	public final void testSubscribe() {
 		final int messageId = 123;
-		assertFalse(connection.isSubscribed(messageId));
-		connection.subscribe(messageId);
-		assertTrue(connection.isSubscribed(messageId));
+		assertFalse(subscriberClientSimple.isSubscribed(messageId));
+		subscriberClientSimple.subscribe(messageId);
+		assertTrue(subscriberClientSimple.isSubscribed(messageId));
 	}
 
 	@Test
@@ -62,23 +62,23 @@ public class SubscriberClientTest {
 		messageSet.add(103);
 		
 		for (Integer messageId: messageSet) {
-			assertFalse(connection.isSubscribed(messageId));
+			assertFalse(subscriberClientSimple.isSubscribed(messageId));
 		}
 		
-		connection.subscribe(messageSet);
+		subscriberClientSimple.subscribe(messageSet);
 		
 		for (Integer messageId: messageSet) {
-			assertTrue(connection.isSubscribed(messageId));
+			assertTrue(subscriberClientSimple.isSubscribed(messageId));
 		}
 	}
 
 	@Test
 	public final void testUnsubscribe() {
 		final int messageId = 123;
-		connection.subscribe(messageId);
-		assertTrue(connection.isSubscribed(messageId));
-		connection.unsubscribe(messageId);
-		assertFalse(connection.isSubscribed(messageId));
+		subscriberClientSimple.subscribe(messageId);
+		assertTrue(subscriberClientSimple.isSubscribed(messageId));
+		subscriberClientSimple.unsubscribe(messageId);
+		assertFalse(subscriberClientSimple.isSubscribed(messageId));
 
 	}
 
@@ -91,27 +91,27 @@ public class SubscriberClientTest {
 		messageSet.add(103);
 		
 		
-		connection.subscribe(messageSet);
+		subscriberClientSimple.subscribe(messageSet);
 		for (Integer messageId: messageSet) {
-			assertTrue(connection.isSubscribed(messageId));
+			assertTrue(subscriberClientSimple.isSubscribed(messageId));
 		}
 		
-		connection.unsubscribeAll();
+		subscriberClientSimple.unsubscribeAll();
 		
 		for (Integer messageId: messageSet) {
-			assertFalse(connection.isSubscribed(messageId));
+			assertFalse(subscriberClientSimple.isSubscribed(messageId));
 		}
 		
-		assertTrue(0==connection.getSubscriptions().size());
+		assertTrue(0==subscriberClientSimple.getSubscriptions().size());
 	}
 
 	@Test
 	public final void testIsSubscribed() {
 		final int messageId = 123;
-		connection.subscribe(messageId);
-		assertTrue(connection.isSubscribed(messageId));
-		connection.unsubscribe(messageId);
-		assertFalse(connection.isSubscribed(messageId));
+		subscriberClientSimple.subscribe(messageId);
+		assertTrue(subscriberClientSimple.isSubscribed(messageId));
+		subscriberClientSimple.unsubscribe(messageId);
+		assertFalse(subscriberClientSimple.isSubscribed(messageId));
 	}
 
 	@Test
@@ -120,41 +120,41 @@ public class SubscriberClientTest {
 		final int messageId2 = 102;
 		final int messageId3 = 103;
 		
-		assertEquals(0, connection.getSubscriptions().size());
+		assertEquals(0, subscriberClientSimple.getSubscriptions().size());
 
-		connection.subscribe(messageId1);
-		assertEquals(1, connection.getSubscriptions().size());
-		assertTrue(connection.getSubscriptions().contains(messageId1));
-		assertFalse(connection.getSubscriptions().contains(messageId2));
-		assertFalse(connection.getSubscriptions().contains(messageId3));
+		subscriberClientSimple.subscribe(messageId1);
+		assertEquals(1, subscriberClientSimple.getSubscriptions().size());
+		assertTrue(subscriberClientSimple.getSubscriptions().contains(messageId1));
+		assertFalse(subscriberClientSimple.getSubscriptions().contains(messageId2));
+		assertFalse(subscriberClientSimple.getSubscriptions().contains(messageId3));
 		
-		connection.subscribe(messageId2);
-		assertEquals(2, connection.getSubscriptions().size());
-		assertTrue(connection.getSubscriptions().contains(messageId1));
-		assertTrue(connection.getSubscriptions().contains(messageId2));
-		assertFalse(connection.getSubscriptions().contains(messageId3));
+		subscriberClientSimple.subscribe(messageId2);
+		assertEquals(2, subscriberClientSimple.getSubscriptions().size());
+		assertTrue(subscriberClientSimple.getSubscriptions().contains(messageId1));
+		assertTrue(subscriberClientSimple.getSubscriptions().contains(messageId2));
+		assertFalse(subscriberClientSimple.getSubscriptions().contains(messageId3));
 
-		connection.subscribe(messageId3);
-		assertEquals(3, connection.getSubscriptions().size());
-		assertTrue(connection.getSubscriptions().contains(messageId1));
-		assertTrue(connection.getSubscriptions().contains(messageId2));
-		assertTrue(connection.getSubscriptions().contains(messageId3));
+		subscriberClientSimple.subscribe(messageId3);
+		assertEquals(3, subscriberClientSimple.getSubscriptions().size());
+		assertTrue(subscriberClientSimple.getSubscriptions().contains(messageId1));
+		assertTrue(subscriberClientSimple.getSubscriptions().contains(messageId2));
+		assertTrue(subscriberClientSimple.getSubscriptions().contains(messageId3));
 
 		// Make sure that inserting a duplicate doesn't change the set's size.
-		connection.subscribe(messageId3);
-		assertEquals(3, connection.getSubscriptions().size());
+		subscriberClientSimple.subscribe(messageId3);
+		assertEquals(3, subscriberClientSimple.getSubscriptions().size());
 
-		connection.unsubscribe(messageId1);
-		assertEquals(2, connection.getSubscriptions().size());
-		assertFalse(connection.getSubscriptions().contains(messageId1));
-		assertTrue(connection.getSubscriptions().contains(messageId2));
-		assertTrue(connection.getSubscriptions().contains(messageId3));
+		subscriberClientSimple.unsubscribe(messageId1);
+		assertEquals(2, subscriberClientSimple.getSubscriptions().size());
+		assertFalse(subscriberClientSimple.getSubscriptions().contains(messageId1));
+		assertTrue(subscriberClientSimple.getSubscriptions().contains(messageId2));
+		assertTrue(subscriberClientSimple.getSubscriptions().contains(messageId3));
 
-		connection.unsubscribeAll();
-		assertEquals(0, connection.getSubscriptions().size());
-		assertFalse(connection.getSubscriptions().contains(messageId1));
-		assertFalse(connection.getSubscriptions().contains(messageId2));
-		assertFalse(connection.getSubscriptions().contains(messageId3));
+		subscriberClientSimple.unsubscribeAll();
+		assertEquals(0, subscriberClientSimple.getSubscriptions().size());
+		assertFalse(subscriberClientSimple.getSubscriptions().contains(messageId1));
+		assertFalse(subscriberClientSimple.getSubscriptions().contains(messageId2));
+		assertFalse(subscriberClientSimple.getSubscriptions().contains(messageId3));
 
 	}
 
@@ -165,6 +165,7 @@ public class SubscriberClientTest {
 		assertNotNull(ZMQ.getVersionString());
 	}
 	
-	SubscriberClient connection;
-	final String connectionName="TestConnection";
+	SubscriberClientSimple subscriberClientSimple;
+	final String subscriberEndpointTcp="tcp://127.0.0.1:6001";
+	final String subscriberEndpointIpc = "ipc:///tmp/smmSubscriberEndpoint";
 }

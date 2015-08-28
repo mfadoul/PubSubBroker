@@ -3,23 +3,33 @@ package zmq.pubsub;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SubscriberClient {
+import org.zeromq.ZContext;
+import org.zeromq.ZMQ;
+import org.zeromq.ZMQ.Socket;
+
+public abstract class SubscriberClient {
 
 	// Constructors
-	public SubscriberClient(String name) {
-		this.name=name;
+	public SubscriberClient(final String subscriberEndpoint) {
+		this.subscriberEndpoint=subscriberEndpoint;
+
+		ZMQ.Context context = ZMQ.context (1);
+		subscriberSocket = context.socket(ZMQ.SUB);
+		subscriberSocket.connect(subscriberEndpoint);
+		
+		// Still need so subscribe before beginning to listen to the socket.
 	}
 
 	public SubscriberClient() {
-		this.name="SubscriptionConnection";
+		this("tcp://127.0.0.1:6001");
 	}
 
 	// Public methods
-	public String getName() {
-		return this.name;
+	public String getSubscriberEndpoint() {
+		return this.subscriberEndpoint;
 	}
 	
-	public void subscribe(int messageId) {
+	public void subscribe(final int messageId) {
 		messageIds.add(messageId);
 	}
 	
@@ -45,7 +55,17 @@ public class SubscriberClient {
 		return this.messageIds;
 	}
 	
+	public final boolean subscriberLoop() {
+		while (true) {
+			receiveMessage(this.subscriberSocket);
+		}
+	}
+	
+	protected abstract boolean receiveMessage(Socket subscriberSocket);
+	
 	// Contents
-	private final String name;
+	private final String subscriberEndpoint;
 	private final Set<Integer> messageIds=new HashSet<Integer>();
+	private final Socket subscriberSocket;
+	
 }
