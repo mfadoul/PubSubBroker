@@ -1,7 +1,5 @@
 package zmq.pubsub;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -13,24 +11,27 @@ import zmq.pubsub.configuration.BrokerConnection;
 import zmq.pubsub.configuration.PubSubBrokerConfiguration;
 import zmq.pubsub.configuration.PubSubBrokerConfigurationJson;
 import zmq.pubsub.configuration.PubSubBrokerConfigurationSimple;
+import zmq.pubsub.configuration.PubSubBrokerConfigurationXml;
 
 public class Broker {
 
+	// Initialize a broker by specifying two TCP ports
 	public Broker(int xpubPort, int xsubPort) {
-		
 		this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationSimple(xpubPort, xsubPort);
-		
 	}
 
-	public Broker(String configFilename) throws FileNotFoundException {
-		File initialFile = new File(configFilename);
-		InputStream inputStream;
-
-		inputStream = new FileInputStream(initialFile);
-		this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationJson(inputStream);
+	// Initialize a broker using an XML Configuration file
+	public Broker(String xmlConfigFilename) throws FileNotFoundException {
+		this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationXml(xmlConfigFilename);
 		System.out.println("pubSubBroker object = " + this.pubSubBrokerConfiguration);		
 	}
 	
+	// Initialize a broker using a JSON Configuration file
+	public Broker(InputStream jsonInputStream) throws FileNotFoundException {
+		this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationJson(jsonInputStream);
+		System.out.println("pubSubBroker object = " + this.pubSubBrokerConfiguration);		
+	}
+
 	public boolean initialize () {
 		
 		Context context = ZMQ.context(1);
