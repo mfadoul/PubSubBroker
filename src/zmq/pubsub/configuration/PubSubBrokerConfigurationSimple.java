@@ -3,7 +3,7 @@ package zmq.pubsub.configuration;
 public class PubSubBrokerConfigurationSimple implements PubSubBrokerConfiguration {
 
 	public PubSubBrokerConfigurationSimple(int xpubPort, int xsubPort) {
-		brokerConnection = new BrokerConnection("Simple", "tcp://*:" + xpubPort, "tcp://*:" + xsubPort);
+		brokerConnection = new BrokerEndpointPair("Simple", "tcp://*:" + xpubPort, "tcp://*:" + xsubPort);
 	}
 
 	@Override
@@ -18,7 +18,7 @@ public class PubSubBrokerConfigurationSimple implements PubSubBrokerConfiguratio
 	}
 
 	@Override
-	public BrokerConnection getBrokerBinding(int index) {
+	public BrokerEndpointPair getBrokerBinding(int index) {
 		if (index == 0) {
 			return brokerConnection;
 		}
@@ -33,11 +33,11 @@ public class PubSubBrokerConfigurationSimple implements PubSubBrokerConfiguratio
 	}
 
 	@Override
-	public BrokerConnection getBrokerExternalConnection(int index) {
+	public BrokerEndpointPair getBrokerExternalConnection(int index) {
 		// The simple configuration has no external connections.
 		return null;
 	}
 	
-	private final BrokerConnection brokerConnection;
+	private final BrokerEndpointPair brokerConnection;
 
 }

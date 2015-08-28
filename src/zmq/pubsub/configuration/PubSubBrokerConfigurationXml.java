@@ -21,8 +21,8 @@ public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 	public PubSubBrokerConfigurationXml(String configFilename) {
 		 // Add a handler for XML files.
 		String tempBrokerName = "Broker";
-		List<BrokerConnection> tempBrokerBindings = new ArrayList<BrokerConnection>();
-		List<BrokerConnection> tempBrokerConnections = new ArrayList<BrokerConnection>();
+		List<BrokerEndpointPair> tempBrokerBindings = new ArrayList<BrokerEndpointPair>();
+		List<BrokerEndpointPair> tempBrokerConnections = new ArrayList<BrokerEndpointPair>();
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
@@ -50,9 +50,9 @@ public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 
 				for (int i = 0; i < brokerBindingsNodeList.getLength(); ++i) {
 					if ("connection".equals(brokerBindingsNodeList.item(i).getNodeName())) {
-						BrokerConnection brokerConfiguration = this.readBrokerConfiguration(brokerBindingsNodeList.item(i));
-						if (brokerConfiguration != null) {
-							tempBrokerBindings.add(brokerConfiguration);
+						BrokerEndpointPair brokerEndpointPair = this.readBrokerEndpointPair(brokerBindingsNodeList.item(i));
+						if (brokerEndpointPair != null) {
+							tempBrokerBindings.add(brokerEndpointPair);
 						}
 					}
 				}
@@ -68,9 +68,9 @@ public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 
 				for (int j = 0; j < brokerExternalConnectionsNodeList.getLength(); ++j) {
 					if ("connection".equals(brokerExternalConnectionsNodeList.item(j).getNodeName())) {
-						BrokerConnection brokerConfiguration = this.readBrokerConfiguration(brokerExternalConnectionsNodeList.item(j));
-						if (brokerConfiguration != null) {
-							tempBrokerConnections.add(brokerConfiguration);
+						BrokerEndpointPair brokerEndpointPair = this.readBrokerEndpointPair(brokerExternalConnectionsNodeList.item(j));
+						if (brokerEndpointPair != null) {
+							tempBrokerConnections.add(brokerEndpointPair);
 						}
 					}
 				}				
@@ -95,7 +95,7 @@ public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 		System.out.println("Number of brokerExternalConnections = " + brokerExternalConnections.size());
 	}
 
-	private BrokerConnection readBrokerConfiguration(Node node) {
+	private BrokerEndpointPair readBrokerEndpointPair(Node node) {
 		if (node==null)
 			return null;
 		
@@ -110,7 +110,7 @@ public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 		subscriberEndpointString = namedNodeMap.getNamedItem("subscriberEndpoint").getNodeValue();
 		
 		if ((nameString != null) && publisherEndpointString != null && subscriberEndpointString != null) {
-			return new BrokerConnection(nameString, publisherEndpointString, subscriberEndpointString);
+			return new BrokerEndpointPair(nameString, publisherEndpointString, subscriberEndpointString);
 		} else {
 			System.err.println("Error inside the Broker Configuration Reader");
 		}
@@ -128,7 +128,7 @@ public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 	}
 
 	@Override
-	public BrokerConnection getBrokerBinding(int index) {
+	public BrokerEndpointPair getBrokerBinding(int index) {
 		return brokerBindings.get(index);
 	}
 
@@ -138,7 +138,7 @@ public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 	}
 
 	@Override
-	public BrokerConnection getBrokerExternalConnection(int index) {
+	public BrokerEndpointPair getBrokerExternalConnection(int index) {
 		return brokerExternalConnections.get(index);
 	}
 
@@ -150,6 +150,6 @@ public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 
 	// Members
 	private final String brokerName;
-	private final List<BrokerConnection> brokerBindings;
-	private final List<BrokerConnection> brokerExternalConnections;
+	private final List<BrokerEndpointPair> brokerBindings;
+	private final List<BrokerEndpointPair> brokerExternalConnections;
 }

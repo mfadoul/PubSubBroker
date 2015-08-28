@@ -7,7 +7,7 @@ import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Context;
 import org.zeromq.ZMQ.Socket;
 
-import zmq.pubsub.configuration.BrokerConnection;
+import zmq.pubsub.configuration.BrokerEndpointPair;
 import zmq.pubsub.configuration.PubSubBrokerConfiguration;
 import zmq.pubsub.configuration.PubSubBrokerConfigurationJson;
 import zmq.pubsub.configuration.PubSubBrokerConfigurationSimple;
@@ -40,7 +40,7 @@ public class Broker {
 
 		System.out.println("Initializing Broker [" + this.pubSubBrokerConfiguration.getName() + "]");
 		for (int index = 0; index < this.pubSubBrokerConfiguration.getBrokerBindingsCount(); ++index) {
-			BrokerConnection brokerConnection = this.pubSubBrokerConfiguration.getBrokerBinding(index);
+			BrokerEndpointPair brokerConnection = this.pubSubBrokerConfiguration.getBrokerBinding(index);
 			
 			// Please note: 
 			// The "XSUB" is bound to the publisher endpoint(s).

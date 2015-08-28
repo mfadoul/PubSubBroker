@@ -14,8 +14,8 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 		JsonReader jsonReader = null;
 		
 		String tempBrokerName = null;
-		List<BrokerConnection> tempBrokerBindings = new ArrayList<BrokerConnection>();
-		List<BrokerConnection> tempBrokerConnections = new ArrayList<BrokerConnection>();
+		List<BrokerEndpointPair> tempBrokerBindings = new ArrayList<BrokerEndpointPair>();
+		List<BrokerEndpointPair> tempBrokerConnections = new ArrayList<BrokerEndpointPair>();
 		
 		try {
 			jsonReader = new JsonReader(new InputStreamReader(jsonInputStream, "UTF-8"));
@@ -31,9 +31,9 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 					// Found brokerBindings
 					jsonReader.beginArray();
 					while (jsonReader.hasNext()) {
-						BrokerConnection brokerConfiguration = readBrokerConfiguration(jsonReader);
-						if (brokerConfiguration != null) {
-							tempBrokerBindings.add(brokerConfiguration);
+						BrokerEndpointPair brokerEndpointPair = readBrokerEndpointPair(jsonReader);
+						if (brokerEndpointPair != null) {
+							tempBrokerBindings.add(brokerEndpointPair);
 						}
 					}
 					jsonReader.endArray();
@@ -41,9 +41,9 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 					// Found brokerExternalConnections
 					jsonReader.beginArray();
 					while (jsonReader.hasNext()) {
-						BrokerConnection brokerConfiguration = readBrokerConfiguration(jsonReader);
-						if (brokerConfiguration != null) {
-							tempBrokerConnections.add(brokerConfiguration);
+						BrokerEndpointPair brokerEndpointPair = readBrokerEndpointPair(jsonReader);
+						if (brokerEndpointPair != null) {
+							tempBrokerConnections.add(brokerEndpointPair);
 						}
 					}
 					jsonReader.endArray();
@@ -64,7 +64,7 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 		System.out.println("Number of brokerExternalConnections = " + brokerExternalConnections.size());
 	}
 
-	private BrokerConnection readBrokerConfiguration(JsonReader jsonReader) throws IOException {
+	private BrokerEndpointPair readBrokerEndpointPair(JsonReader jsonReader) throws IOException {
 		String nameString = null;
 		String publisherEndpointString = null;
 		String subscriberEndpointString = null;
@@ -86,7 +86,7 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 		jsonReader.endObject();
 
 		if ((nameString != null) && publisherEndpointString != null && subscriberEndpointString != null) {
-			return new BrokerConnection(nameString, publisherEndpointString, subscriberEndpointString);
+			return new BrokerEndpointPair(nameString, publisherEndpointString, subscriberEndpointString);
 		} else {
 			System.err.println("Error inside the Broker Configuration Reader");
 		}
@@ -105,7 +105,7 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 	}
 
 	@Override
-	public BrokerConnection getBrokerBinding(int index) {
+	public BrokerEndpointPair getBrokerBinding(int index) {
 		return brokerBindings.get(index);
 	}
 
@@ -115,7 +115,7 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 	}
 
 	@Override
-	public BrokerConnection getBrokerExternalConnection(int index) {
+	public BrokerEndpointPair getBrokerExternalConnection(int index) {
 		return brokerExternalConnections.get(index);
 	}
 
@@ -127,6 +127,6 @@ public class PubSubBrokerConfigurationJson implements PubSubBrokerConfiguration 
 	
 	// Members
 	private final String brokerName;
-	private final List<BrokerConnection> brokerBindings;
-	private final List<BrokerConnection> brokerExternalConnections;
+	private final List<BrokerEndpointPair> brokerBindings;
+	private final List<BrokerEndpointPair> brokerExternalConnections;
 }

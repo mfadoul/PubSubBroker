@@ -3,14 +3,18 @@ package zmq.pubsub;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Connection {
+public class SubscriberClient {
 
-	public Connection(String name) {
+	// Constructors
+	public SubscriberClient(String name) {
 		this.name=name;
 	}
 
+	public SubscriberClient() {
+		this.name="SubscriptionConnection";
+	}
+
 	// Public methods
-	
 	public String getName() {
 		return this.name;
 	}
@@ -19,7 +23,7 @@ public class Connection {
 		messageIds.add(messageId);
 	}
 	
-	public void subscribeAll(final Set<Integer> messageIds) {
+	public void subscribe(final Set<Integer> messageIds) {
 		this.messageIds.addAll(messageIds);
 	}
 
@@ -42,6 +46,6 @@ public class Connection {
 	}
 	
 	// Contents
-	private String name;
+	private final String name;
 	private final Set<Integer> messageIds=new HashSet<Integer>();
 }

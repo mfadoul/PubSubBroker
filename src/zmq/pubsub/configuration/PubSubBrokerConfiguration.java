@@ -10,10 +10,10 @@ public interface PubSubBrokerConfiguration {
 	
 	// Brokers
 	int getBrokerBindingsCount();
-	BrokerConnection getBrokerBinding(int index);
+	BrokerEndpointPair getBrokerBinding(int index);
 	
 	//Connections (i.e. other brokers started by others)
 	int getBrokerExternalConnectionCount();
-	BrokerConnection getBrokerExternalConnection(int index);
+	BrokerEndpointPair getBrokerExternalConnection(int index);
 
 }

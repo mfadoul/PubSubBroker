@@ -1,7 +1,7 @@
 package zmq.pubsub.configuration;
 
-public class BrokerConnection {
-	public BrokerConnection(String name, String publisherEndpoint, String subscriberEndpoint) {
+public class BrokerEndpointPair {
+	public BrokerEndpointPair(String name, String publisherEndpoint, String subscriberEndpoint) {
 		super();
 		this.name = name;
 		this.publisherEndpoint = publisherEndpoint;

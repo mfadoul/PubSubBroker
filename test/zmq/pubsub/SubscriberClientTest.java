@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.zeromq.ZMQ;
 
-public class ConnectionTest {
+public class SubscriberClientTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -24,7 +24,7 @@ public class ConnectionTest {
 
 	@Before
 	public void setUp() throws Exception {
-		connection = new Connection(this.connectionName);
+		connection = new SubscriberClient(this.connectionName);
 	}
 
 	@After
@@ -33,9 +33,9 @@ public class ConnectionTest {
 
 	@Test
 	public final void testConnection() {
-		Connection connection2=null;
+		SubscriberClient connection2=null;
 		
-		connection2 = new Connection("Temp");
+		connection2 = new SubscriberClient("Temp");
 		assertNotNull(connection2);
 	}
 
@@ -65,7 +65,7 @@ public class ConnectionTest {
 			assertFalse(connection.isSubscribed(messageId));
 		}
 		
-		connection.subscribeAll(messageSet);
+		connection.subscribe(messageSet);
 		
 		for (Integer messageId: messageSet) {
 			assertTrue(connection.isSubscribed(messageId));
@@ -91,7 +91,7 @@ public class ConnectionTest {
 		messageSet.add(103);
 		
 		
-		connection.subscribeAll(messageSet);
+		connection.subscribe(messageSet);
 		for (Integer messageId: messageSet) {
 			assertTrue(connection.isSubscribed(messageId));
 		}
@@ -165,6 +165,6 @@ public class ConnectionTest {
 		assertNotNull(ZMQ.getVersionString());
 	}
 	
-	Connection connection;
+	SubscriberClient connection;
 	final String connectionName="TestConnection";
 }

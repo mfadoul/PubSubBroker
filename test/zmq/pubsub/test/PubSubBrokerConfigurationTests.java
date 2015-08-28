@@ -6,10 +6,10 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import zmq.pubsub.configuration.PubSubBrokerConfigurationJsonTest;
 import zmq.pubsub.configuration.PubSubBrokerConfigurationXmlTest;
-import zmq.pubsub.ConnectionTest;
+import zmq.pubsub.SubscriberClientTest;
 
 @RunWith(Suite.class)
-@SuiteClasses({ PubSubBrokerConfigurationJsonTest.class, PubSubBrokerConfigurationXmlTest.class, ConnectionTest.class })
+@SuiteClasses({ PubSubBrokerConfigurationJsonTest.class, PubSubBrokerConfigurationXmlTest.class, SubscriberClientTest.class })
 public class PubSubBrokerConfigurationTests {
 
 }
