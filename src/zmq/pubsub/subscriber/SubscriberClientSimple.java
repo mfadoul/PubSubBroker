@@ -1,6 +1,8 @@
-package zmq.pubsub;
+package zmq.pubsub.subscriber;
 
 import org.zeromq.ZMQ.Socket;
+
+import zmq.pubsub.MessageUtils;
 
 public class SubscriberClientSimple extends SubscriberClient {
 

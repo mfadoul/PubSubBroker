@@ -1,4 +1,4 @@
-package zmq.pubsub;
+package zmq.pubsub.subscriber;
 
 import static org.junit.Assert.*;
 

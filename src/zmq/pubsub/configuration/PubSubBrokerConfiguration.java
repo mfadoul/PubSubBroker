@@ -1,10 +1,6 @@
 package zmq.pubsub.configuration;
 
 public interface PubSubBrokerConfiguration {
-	
-	// Specify a file to load.
-	//boolean loadConfiguration(String filename);
-	
 	// General parameters
 	String getName();
 	

@@ -1,0 +1,17 @@
+{
+   "name": "Example Subscription List",
+   "description": "This is an example subscription list that can be used by one or more applications that are subscriber clients.",
+   "messages": 
+   [
+        {"messageName": "deleteEntity"},
+        {"messageName": "updateEntity"},
+        {"messageName": "fireWeapon"},
+        {"messageName": "updateTime"},
+        {"messageName": "setWind"},
+        {"messageId": 4},
+        {"messageId": 5},
+        {"messageId": 6},
+        {"messageId": 1002},
+        {"messageId": 1003}
+    ]
+}

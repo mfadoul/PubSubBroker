@@ -7,9 +7,9 @@ import java.io.InputStream;
 
 import zmq.pubsub.configuration.PubSubBrokerConfigurationJson;
 
-public class PubSubBrokerConfigurationJsonSimpleTest {
+public class SimplePubSubBrokerConfigurationJsonTest {
 
-	public PubSubBrokerConfigurationJsonSimpleTest() {
+	public SimplePubSubBrokerConfigurationJsonTest() {
 		// TODO Auto-generated constructor stub
 	}
 

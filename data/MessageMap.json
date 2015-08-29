@@ -1,0 +1,41 @@
+{
+    "name": "Example Message Map",
+    "description": "This is an example Message Map file that associates message IDs with names.",
+    "maxMessagesPerGroup": 1000,
+    "messageGroups": 
+    [
+        {
+            "groupName": "Environment",
+            "messages":
+            [
+		        {"messageName": "setWeather"},
+		        {"messageName": "requestWeather"},
+		        {"messageName": "updateWeather"},
+		        {"messageName": "setWind"},
+		        {"messageName": "requestWind"},
+		        {"messageName": "updateWind"}
+		    ]
+		},
+        {
+            "groupName": "Ocean",
+            "messages":
+            [
+		        {"messageName": "setOcean"},
+		        {"messageName": "requestOcean"},
+		        {"messageName": "updateOcean"},
+		        {"messageName": "setSoundSpeedProfile"},
+		        {"messageName": "requestSoundSpeedProfile"},
+		        {"messageName": "updateSoundSpeedProfile"}
+		    ]
+		},
+        {
+            "groupName": "Entity",
+            "messages":
+            [
+		        {"messageName": "createEntity"},
+		        {"messageName": "deleteEntity"},
+		        {"messageName": "updateEntity"}
+		    ]
+		}
+    ]
+}

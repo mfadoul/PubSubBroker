@@ -1,9 +1,8 @@
-package zmq.pubsub;
+package zmq.pubsub.subscriber;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Socket;
 

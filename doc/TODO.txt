@@ -1,3 +1,11 @@
 Tasks
-1) Create adapter for SMM-functionality to use ZeroMQ.
-2) Build more unit tests.  (When isn't this a task?)
+* MessageMap classes
+  * Clean up
+  * Unit tests
+  * Integrate with other functionality
+* Subscription list
+  * Implement (e.g. JSON reader, etc)
+  * Unit tests
+  * Integrate with other functionality
+* Create adapter for SMM-functionality to use ZeroMQ.
+* Build more unit tests.  (When isn't this a task?)
