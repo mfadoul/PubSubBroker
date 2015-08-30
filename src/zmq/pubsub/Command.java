@@ -3,6 +3,8 @@ package zmq.pubsub;
 import java.util.HashMap;
 import java.util.Map;
 
+// Is this class deprecated????
+
 public enum Command {
 	SendMessage(1),
 	SendMessageWithFilter(2), // Filter receiver

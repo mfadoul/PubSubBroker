@@ -1,6 +1,7 @@
 {
    "name": "Example Subscription List",
    "description": "This is an example subscription list that can be used by one or more applications that are subscriber clients.",
+   "messageMapFile": "data/MessageMap.json"
    "messages": 
    [
         {"messageName": "deleteEntity"},

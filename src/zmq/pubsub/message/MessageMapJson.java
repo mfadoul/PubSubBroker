@@ -6,6 +6,11 @@ import java.io.InputStreamReader;
 
 import com.google.gson.stream.JsonReader;
 
+// This class inherits from the MessageMap.  The extra functionality here is for
+// Loading the MessageMap from JSON.
+// * Question: Is there a better design pattern for separating the base functionality
+//   from the JSON loader methods?
+
 public class MessageMapJson extends MessageMap {
 
 	public MessageMapJson(InputStream jsonInputStream) {

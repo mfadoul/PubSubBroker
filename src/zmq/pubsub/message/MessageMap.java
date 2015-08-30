@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+// A class for mapping between message IDs (integers) and message Names (Strings)
 public class MessageMap {
 
 	public MessageMap() {

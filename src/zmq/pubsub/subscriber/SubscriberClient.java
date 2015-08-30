@@ -44,7 +44,7 @@ public abstract class SubscriberClient {
 		this.messageIds.clear();
 	}
 	
-	public boolean isSubscribed(int messageId) {
+	public boolean isSubscribed(final int messageId) {
 		if (this.messageIds.contains(messageId))
 			return true;
 		else
