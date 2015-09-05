@@ -1,8 +1,8 @@
 {
    "name": "Example Subscription List",
    "description": "This is an example subscription list that can be used by one or more applications that are subscriber clients.",
-   "messageMapFile": "data/MessageMap.json"
-   "subscriberEndpoint": "tcp://127.0.0.1:6001"
+   "messageMapFile": "data/MessageMap.json",
+   "subscriberEndpoint": "tcp://127.0.0.1:6001",
    "messages": 
    [
         {"messageName": "deleteEntity"},

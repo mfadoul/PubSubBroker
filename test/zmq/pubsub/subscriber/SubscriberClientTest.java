@@ -24,7 +24,7 @@ public class SubscriberClientTest {
 
 	@Before
 	public void setUp() throws Exception {
-		subscriberClientSimple = new SubscriberClientSimple(this.subscriberEndpointTcp);
+		subscriberClientSimple = new SubscriberClientSimple();
 	}
 
 	@After
@@ -35,7 +35,7 @@ public class SubscriberClientTest {
 	public final void testSubscriberClient() {
 		SubscriberClient subscriberClient=null;
 		
-		subscriberClient = new SubscriberClientSimple(subscriberEndpointTcp);
+		subscriberClient = new SubscriberClientSimple();
 		assertNotNull(subscriberClient);
 	}
 

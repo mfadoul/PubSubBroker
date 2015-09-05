@@ -4,7 +4,16 @@ import org.zeromq.ZMQ.Socket;
 
 import zmq.pubsub.MessageUtils;
 
-public class SubscriberClientSimple extends SubscriberClient {
+public class SubscriberClientJsonSimple extends SubscriberClientJson {
+
+	public SubscriberClientJsonSimple(String subscriberConfigFilename) {
+		super(subscriberConfigFilename);
+	}
+
+	
+	public SubscriberClientJsonSimple(SubscriberData subscriberData) {
+		super(subscriberData);
+	}
 
 	@Override
 	protected boolean receiveMessage(Socket subscriberSocket) {

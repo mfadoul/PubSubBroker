@@ -30,7 +30,12 @@ public final class SubscriberData {
 		
 		// Optional parameters, initialized to default values.
 		private String subscriberEndpoint = defaultSubscriberEndpoint;
-		private Set<Integer> messageIds=new HashSet<Integer>();		
+		private Set<Integer> messageIds=new HashSet<Integer>();
+
+		// This is a place to hold messageNames read in from the config file,
+		// until they can be converted to messageIds.  This is not exposed to outside.
+		private Set<String> tempMessageNames=new HashSet<String>();
+		
 		private MessageMap messageMap = null;
 
 		public Builder() {
@@ -123,6 +128,21 @@ public final class SubscriberData {
 					// an IllegalStateException.
 				}
 				
+				// Convert messageNames to messageIds
+				for (String messageName: tempMessageNames) {
+					Integer messageId = null;
+
+					// Get the messageId
+					try {
+						messageId = this.messageMap.getMessageId(messageName);
+						messageIds.add(messageId);
+					} catch (IOException e) {
+						// Fail if the messageMap is not set.
+						// Still check below to see if the messageId was set.
+						System.err.println("Couldn't find message name " + messageName);
+					}
+
+				}
 			}
 			this.subscriberEndpoint=tempSubscriberEndpoint;
 			
@@ -151,14 +171,7 @@ public final class SubscriberData {
 
 			
 			if (messageName != null) {
-				// Get the messageId
-				try {
-					messageId = this.messageMap.getMessageId(messageName);
-					return true;
-				} catch (NullPointerException e) {
-					// Fail if the messageMap is not set.
-					// Still check below to see if the messageId was set.
-				}
+				tempMessageNames.add(messageName);
 			}
 			
 			if (messageId != null) {

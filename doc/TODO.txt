@@ -9,3 +9,5 @@ Tasks
   * Integrate with other functionality
 * Create adapter for SMM-functionality to use ZeroMQ.
 * Build more unit tests.  (When isn't this a task?)
+
+Current Location: Add unit tests for "SubscriberClient" family of classes.
