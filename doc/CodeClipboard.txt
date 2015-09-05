@@ -1,0 +1,102 @@
+	public SubscriberClientJson(InputStream jsonInputStream) {
+
+		JsonReader jsonReader = null;
+
+		String tempSubscriberName = null;
+		String tempSubscriberEndpoint = null;
+		String tempMessageMapFile = null;
+		String tempDescription = null;
+		try {
+			jsonReader = new JsonReader(new InputStreamReader(jsonInputStream, "UTF-8"));
+			// Read the name in the pubsubbroker
+			jsonReader.beginObject();
+			while (jsonReader.hasNext()) {
+				String name = jsonReader.nextName();
+				if ("name".equals(name)) {
+					tempSubscriberName = jsonReader.nextString();
+					System.out.println("Name of the subscriber = " + tempSubscriberName);
+				} else if ("description".equals(name)) {
+					tempDescription = jsonReader.nextString();
+					System.out.println("Subscription description = " + tempDescription);
+				} else if ("messageMapFile".equals(name)) {
+					tempMessageMapFile = jsonReader.nextString();
+					System.out.println("Filename of the messageMap = " + tempMessageMapFile);
+				} else if ("subscriberEndpoint".equals(name)) {
+					tempSubscriberEndpoint = jsonReader.nextString();
+					System.out.println("Subscriber Endpoint = " + tempSubscriberEndpoint);
+				} else if ("messages".equals(name)) {
+					// Found brokerBindings
+					jsonReader.beginArray();
+					while (jsonReader.hasNext()) {
+						// Read each messageName or MessageId.
+						if (readMessageFromJson(jsonReader)) {
+							// New message subscription
+						} else {
+							// Failed to subscribe to a new message for some reason.
+						}
+					}
+					jsonReader.endArray();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		this.subscriberEndpoint=tempSubscriberEndpoint;
+
+		System.out.println("Connecting to subscriberSocket (" + subscriberEndpoint + ")");
+		ZMQ.Context context = ZMQ.context (1);
+		subscriberSocket = context.socket(ZMQ.SUB);
+		subscriberSocket.connect(subscriberEndpoint);
+		
+		// Subscribe after the connecting to the subscriberSocket.
+		for (Integer messageId: this.getSubscriptions()) {
+			subscriberSocket.subscribe(MessageUtils.intToByteArray(messageId));
+			System.out.println("Subscribing to message #" + messageId);
+		}
+		
+	}
+
+	
+	public SubscriberClientJson() {
+		// TODO Auto-generated constructor stub
+	}
+
+	// This reads a message entry in the subscription list file.
+	// @return whether the subscriber could successfully subscribe to a new messageId.
+	private boolean readMessageFromJson(JsonReader jsonReader) throws IOException {
+		Integer messageId = null;
+		String messageName = null;
+		jsonReader.beginObject();
+
+		while (jsonReader.hasNext()) {
+			String name = jsonReader.nextName();
+			if ("messageName".equals(name)) {
+				messageName = jsonReader.nextString();
+			} else if ("messageId".equals(name)) {
+				messageId = jsonReader.nextInt();
+			} else {
+				jsonReader.skipValue();
+			}
+		}
+		jsonReader.endObject();
+
+		
+		if (messageName != null) {
+			// Get the messageId
+			try {
+				messageId = this.messageMap.getMessageId(messageName);
+				return true;
+			} catch (NullPointerException e) {
+				// Fail if the messageMap is not set.
+				// Still check below to see if the messageId was set.
+			}
+		}
+		
+		if (messageId != null) {
+			this.subscribe(messageId);
+			return true;
+		} else {
+			return false; // Fail if both messageId and messageName were not set.
+		}
+	}
