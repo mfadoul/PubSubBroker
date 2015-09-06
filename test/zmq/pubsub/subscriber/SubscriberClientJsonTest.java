@@ -65,7 +65,7 @@ public class SubscriberClientJsonTest {
 		SubscriberClientJson subscriberClientJson = new SubscriberClientJsonSimple(subscriberConfigFilename);
 		
 		System.out.println("Subscriber Config = " + subscriberClientJson);
-		assertEquals("tcp://127.0.0.1:6001", subscriberClientJson.getSubscriberEndpoint());
+		assertEquals(expectedSubscriberEndpoint, subscriberClientJson.getSubscriberEndpoint());
 		assertEquals(expectedSubscriptionIds, subscriberClientJson.getSubscriptions());
 		
 		for (String messageName: expectedSubscriptionNames) {
@@ -85,7 +85,7 @@ public class SubscriberClientJsonTest {
 		SubscriberData subscriberData = new SubscriberData.Builder().jsonInputFilename(subscriberConfigFilename).build();
 		SubscriberClientJson subscriberClientJson = new SubscriberClientJsonSimple(subscriberData);
 		System.out.println("Subscriber Config = " + subscriberClientJson);
-		assertEquals("tcp://127.0.0.1:6001", subscriberClientJson.getSubscriberEndpoint());
+		assertEquals(expectedSubscriberEndpoint, subscriberClientJson.getSubscriberEndpoint());
 
 		for (String messageName: expectedSubscriptionNames) {
 			assertTrue(subscriberClientJson.isSubscribed(messageName));
@@ -102,6 +102,4 @@ public class SubscriberClientJsonTest {
 	// private final String expectedMessageMapFilename = "data/MessageMap.json";
 	private final Set<Integer> expectedSubscriptionIds = new HashSet<Integer>();
 	private final Set<String> expectedSubscriptionNames = new HashSet<String>();
-	
-
 }
