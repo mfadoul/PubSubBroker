@@ -41,9 +41,12 @@ public class SubscriberClientJsonTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		final Integer[] expectedSubscriptionsIdsArray = {3, 4, 5, 6, 1002, 1003, 2001, 2002};
 		// Note: In the file SubscriberConfig.json, the messageNames "fireWeapon" and "updateTime" are invalid.
-		final Integer[] expectedSubscriptionsArray = {3, 4, 5, 6, 1002, 1003, 2001, 2002};
-		expectedSubscriptions.addAll(Arrays.asList(expectedSubscriptionsArray));
+		final String[] expectedSubscriptionsNamesArray = {"setWind", "requestWind", "updateWind", "updateOcean", "setSoundSpeedProfile", "deleteEntity", "updateEntity"};
+		
+		expectedSubscriptionIds.addAll(Arrays.asList(expectedSubscriptionsIdsArray));
+		expectedSubscriptionNames.addAll(Arrays.asList(expectedSubscriptionsNamesArray));
 	}
 
 	/**
@@ -63,8 +66,15 @@ public class SubscriberClientJsonTest {
 		
 		System.out.println("Subscriber Config = " + subscriberClientJson);
 		assertEquals("tcp://127.0.0.1:6001", subscriberClientJson.getSubscriberEndpoint());
-		assertEquals(expectedSubscriptions, subscriberClientJson.getSubscriptions());
+		assertEquals(expectedSubscriptionIds, subscriberClientJson.getSubscriptions());
 		
+		for (String messageName: expectedSubscriptionNames) {
+			assertTrue(subscriberClientJson.isSubscribed(messageName));
+		}
+		
+		// Two messageNames that are listed in the JSON file, but do not have corresponding messageIds.
+		assertFalse(subscriberClientJson.isSubscribed("fireWeapon"));
+		assertFalse(subscriberClientJson.isSubscribed("updateTime"));
 	}
 
 	/**
@@ -76,12 +86,22 @@ public class SubscriberClientJsonTest {
 		SubscriberClientJson subscriberClientJson = new SubscriberClientJsonSimple(subscriberData);
 		System.out.println("Subscriber Config = " + subscriberClientJson);
 		assertEquals("tcp://127.0.0.1:6001", subscriberClientJson.getSubscriberEndpoint());
+
+		for (String messageName: expectedSubscriptionNames) {
+			assertTrue(subscriberClientJson.isSubscribed(messageName));
+		}
+		
+		// Two messageNames that are listed in the JSON file, but do not have corresponding messageIds.
+		assertFalse(subscriberClientJson.isSubscribed("fireWeapon"));
+		assertFalse(subscriberClientJson.isSubscribed("updateTime"));
 	}
 
 	private final String subscriberConfigFilename = "data/SubscriberConfig.json";
 	private final String expectedSubscriberEndpoint = "tcp://127.0.0.1:6001";
-	private final String expectedMessageMapFilename = "data/MessageMap.json";
-	private final Set<Integer> expectedSubscriptions = new HashSet<Integer>();
+	// Not exposed:
+	// private final String expectedMessageMapFilename = "data/MessageMap.json";
+	private final Set<Integer> expectedSubscriptionIds = new HashSet<Integer>();
+	private final Set<String> expectedSubscriptionNames = new HashSet<String>();
 	
 
 }

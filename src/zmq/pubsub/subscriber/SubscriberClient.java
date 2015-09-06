@@ -1,5 +1,6 @@
 package zmq.pubsub.subscriber;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,7 +10,7 @@ import org.zeromq.ZMQ.Socket;
 import zmq.pubsub.MessageUtils;
 import zmq.pubsub.message.MessageMap;
 
-public abstract class SubscriberClient {
+public abstract class SubscriberClient implements SubscriberClientInterface {
 
 	// Constructors
 	public SubscriberClient() {
@@ -39,15 +40,27 @@ public abstract class SubscriberClient {
 	}
 
 	// Public methods
+	/* (non-Javadoc)
+	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#getSubscriberEndpoint()
+	 */
+	@Override
 	public String getSubscriberEndpoint() {
 		return this.subscriberEndpoint;
 	}
 	
+	/* (non-Javadoc)
+	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#subscribe(int)
+	 */
+	@Override
 	public void subscribe(final int messageId) {
 		messageIds.add(messageId);
 		subscriberSocket.subscribe(MessageUtils.intToByteArray(messageId));
 	}
 	
+	/* (non-Javadoc)
+	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#subscribe(java.util.Set)
+	 */
+	@Override
 	public void subscribe(final Set<Integer> messageIds) {
 		this.messageIds.addAll(messageIds);
 		for (Integer messageId: messageIds) {
@@ -55,11 +68,19 @@ public abstract class SubscriberClient {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#unsubscribe(int)
+	 */
+	@Override
 	public void unsubscribe(final int messageId) {
 		this.messageIds.remove(messageId);
 		subscriberSocket.unsubscribe(MessageUtils.intToByteArray(messageId));
 	}
 	
+	/* (non-Javadoc)
+	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#unsubscribeAll()
+	 */
+	@Override
 	public void unsubscribeAll() {
 		for (Integer messageId: this.getSubscriptions()) {
 			subscriberSocket.unsubscribe(MessageUtils.intToByteArray(messageId));
@@ -67,16 +88,95 @@ public abstract class SubscriberClient {
 		this.messageIds.clear();
 	}
 	
+	@Override
+	public boolean subscribeByName(String messageName) {
+		if (this.messageMap != null) {
+			// Try to find a match
+			try {
+				Integer messageId = messageMap.getMessageId(messageName);
+				if (messageId != null) {
+					this.subscribe(messageId);
+					return true;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public int subscribeByName(Set<String> messageNames) {
+		int count = 0;
+		for (String messageName: messageNames) {
+			if (this.subscribeByName(messageName)) {
+				++count;
+			}
+		}
+		return count;
+	}
+
+	@Override
+	public boolean unsubscribeByName(String messageName) {
+		if (this.messageMap != null) {
+			// Try to find a match
+			try {
+				Integer messageId = messageMap.getMessageId(messageName);
+				if (messageId != null) {
+					this.unsubscribe(messageId);
+					return true;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#isSubscribed(int)
+	 */
+	@Override
 	public boolean isSubscribed(final int messageId) {
 		if (this.messageIds.contains(messageId))
 			return true;
 		else
 			return false;
 	}
+
+	/* (non-Javadoc)
+	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#isSubscribed(int)
+	 */
+	@Override
+	public boolean isSubscribed(final String messageName) {
+		if (this.messageMap != null) {
+			// Try to find a match
+			try {
+				Integer messageId = messageMap.getMessageId(messageName);
+				if (messageId != null) {
+					if (this.messageIds.contains(messageId)) {
+						return true;
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#getSubscriptions()
+	 */
+	@Override
 	public Set<Integer> getSubscriptions() {
 		return this.messageIds;
 	}
 	
+	/* (non-Javadoc)
+	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#subscriberLoop()
+	 */
+	@Override
 	public final boolean subscriberLoop() {
 		while (true) {
 			receiveMessage(this.subscriberSocket);

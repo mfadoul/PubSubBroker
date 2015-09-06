@@ -33,7 +33,7 @@ public class SubscriberClientTest {
 
 	@Test
 	public final void testSubscriberClient() {
-		SubscriberClient subscriberClient=null;
+		SubscriberClientInterface subscriberClient=null;
 		
 		subscriberClient = new SubscriberClientSimple();
 		assertNotNull(subscriberClient);
