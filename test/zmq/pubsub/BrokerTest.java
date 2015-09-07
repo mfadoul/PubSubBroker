@@ -196,7 +196,24 @@ public class BrokerTest {
 		System.out.println("Broker=" + broker);
 
 		assertTrue(broker.toString().contains("xpubSocket=null, xsubSocket=null, initialized=false"));
+		
+		// Try freeResources again.  Nothing bad should happen.
+		broker.freeResources();
+		assertFalse(broker.isInitialized());
+		assertTrue(broker.toString().contains("xpubSocket=null, xsubSocket=null, initialized=false"));
 	}
+	
+	
+	// TODO: Test for the main() method, using different arguments.
+	/*
+	@Test
+	public final void testMainOneArg() {
+		String [] args = {};
+		
+		//Broker.main(args);
+		fail("Not yet implemented"); // TODO
+	}
+    */
 	
 	Broker broker = null;
 }

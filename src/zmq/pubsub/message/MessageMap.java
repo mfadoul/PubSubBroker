@@ -40,12 +40,23 @@ public class MessageMap {
 	
 	// Returns the first messageId that is associated with a messageName.
 	// Hopefully, each messageName maps to a single messageId.
-	public int getMessageId(String messageName) throws IOException {		
-		for (Map.Entry<Integer, String> entry: map.entrySet()) {
-			if ((entry.getValue()!= null) && (entry.getValue().equals(messageName))) {
-				return entry.getKey();
+	public int getMessageId(String messageName) throws IOException {
+		// Check for a null value
+		if (messageName != null) {
+			for (Map.Entry<Integer, String> entry: map.entrySet()) {
+				if ((entry.getValue()!= null) && (entry.getValue().equals(messageName))) {
+					return entry.getKey();
+				}
+			}
+		} else {
+			for (Map.Entry<Integer, String> entry: map.entrySet()) {
+				// Support null keys
+				if (entry.getValue() == null) {
+					return entry.getKey();
+				}
 			}
 		}
+		
 		throw (new IOException("Could not find messageName [" + messageName + "]"));
 	}
 	

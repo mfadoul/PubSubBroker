@@ -18,18 +18,24 @@ public abstract class SubscriberClient implements SubscriberClientInterface {
 	}
 
 	public SubscriberClient(final String subscriberEndpoint) {
+		this(subscriberEndpoint, new MessageMap());
+		
+		// The user may want to populate the message map.
+	}
+
+	public MessageMap getMessageMap() {
+		return messageMap;
+	}
+
+	public SubscriberClient(String subscriberEndpoint, MessageMap messageMap) {
 		this.subscriberEndpoint=subscriberEndpoint;
 
 		ZMQ.Context context = ZMQ.context (1);
 		subscriberSocket = context.socket(ZMQ.SUB);
 		subscriberSocket.connect(subscriberEndpoint);
-		
-		// Still need so subscribe before beginning to listen to the socket.
-	}
-
-	public SubscriberClient(String subscriberEndpoint, MessageMap messageMap) {
-		this(subscriberEndpoint);
 		this.messageMap = messageMap;		
+
+		// Still need to subscribe before beginning to listen to the socket.
 	}
 	
 	public SubscriberClient(String subscriberEndpoint, MessageMap messageMap, Set<Integer> messageIds) {
@@ -196,6 +202,6 @@ public abstract class SubscriberClient implements SubscriberClientInterface {
 	protected final Socket subscriberSocket;
 	
 	// This is a map of messageIds to messageNames
-	protected MessageMap messageMap = null;
+	protected final MessageMap messageMap;
 	
 }

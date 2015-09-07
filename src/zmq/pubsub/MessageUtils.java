@@ -4,11 +4,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class MessageUtils {
-
-	public MessageUtils() {
-		
-	}
-
+	// This class should only have static methods.  No need for a public constructor.
+	
 /*	public static byte[] intToByteArray (int inputInt) {
 		return ByteBuffer.allocate(4).putInt(inputInt).array();
 	}

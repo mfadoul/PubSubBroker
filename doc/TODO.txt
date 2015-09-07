@@ -9,5 +9,7 @@ Tasks
   * Integrate with other functionality
 * Create adapter for SMM-functionality to use ZeroMQ.
 * Build more unit tests.  (When isn't this a task?)
+* Create unit tests that spawn other components (e.g. broker) so that message passing can be tested.
+* Implement C++ version
 
 Current Location: Add unit tests for "SubscriberClient" family of classes.

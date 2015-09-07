@@ -2,7 +2,9 @@ package zmq.pubsub.subscriber;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.After;
@@ -12,10 +14,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.zeromq.ZMQ;
 
+import zmq.pubsub.message.MessageMap;
+
 public class SubscriberClientTest {
 
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	public static void setUpBeforeClass() throws Exception {		
+
 	}
 
 	@AfterClass
@@ -25,10 +30,27 @@ public class SubscriberClientTest {
 	@Before
 	public void setUp() throws Exception {
 		subscriberClientSimple = new SubscriberClientSimple();
+		
+		MessageMap messageMap = subscriberClientSimple.getMessageMap();
+		messageMap.addMessage(-1, null);
+		messageMap.addMessage(0, "");
+		messageMap.addMessage(1, "Message1");
+		messageMap.addMessage(2, "Message2");
+		messageMap.addMessage(3, "Message3");
+		messageMap.addMessage(4, "Message4");
+		
+		// This is for subscribing by name.
+		sampleMessageMap.put(-1, null);
+		sampleMessageMap.put(0, "");
+		sampleMessageMap.put(1, "Message1");
+		sampleMessageMap.put(2, "Message2");
+
+
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		subscriberClientSimple = null;
 	}
 
 	@Test
@@ -159,6 +181,62 @@ public class SubscriberClientTest {
 	}
 
 	@Test
+	public final void testSubscribeByNameString() {
+		for (String messageName: sampleMessageMap.values()) {
+			assertFalse(subscriberClientSimple.isSubscribed(messageName));
+		}
+		
+		// Now, subscribe by name
+		for (String messageName: sampleMessageMap.values()) {
+			subscriberClientSimple.subscribeByName(messageName);
+			assertTrue(subscriberClientSimple.isSubscribed(messageName));
+		}
+	}
+
+	@Test
+	public final void testSubscribeByNameSetOfString() {
+		Set<String> messageNames = new HashSet<String>();
+		
+		messageNames.addAll(sampleMessageMap.values());
+
+		for (String messageName: sampleMessageMap.values()) {
+			assertFalse(subscriberClientSimple.isSubscribed(messageName));
+		}
+
+		// Now, subscribe by name
+		subscriberClientSimple.subscribeByName(messageNames);
+		
+		for (String messageName: sampleMessageMap.values()) {
+			assertTrue(subscriberClientSimple.isSubscribed(messageName));
+		}
+	}
+
+	@Test
+	public final void testUnsubscribeByName() {
+		
+		Set<String> messageNames = new HashSet<String>();
+		
+		messageNames.addAll(sampleMessageMap.values());
+
+		// Now, subscribe by name
+		assertEquals(messageNames.size(), subscriberClientSimple.subscribeByName(messageNames));
+		
+		for (String messageName: sampleMessageMap.values()) {
+			assertTrue(subscriberClientSimple.isSubscribed(messageName));
+		}
+		
+		// Unsubscribe one-by-one
+		for (String messageName: sampleMessageMap.values()) {
+			assertTrue(subscriberClientSimple.unsubscribeByName(messageName));
+			assertFalse(subscriberClientSimple.isSubscribed(messageName));
+		}
+		
+		// Try some bogus names
+		assertFalse(subscriberClientSimple.unsubscribeByName("Message"));
+		assertFalse(subscriberClientSimple.unsubscribeByName("MessageId1_invalid"));
+	}
+
+	@Test
 	public final void testZmqVersion() {
 		assertTrue(ZMQ.getMajorVersion()>=0);
 		assertTrue(ZMQ.getMinorVersion()>=0);
@@ -168,4 +246,7 @@ public class SubscriberClientTest {
 	SubscriberClientSimple subscriberClientSimple;
 	final String subscriberEndpointTcp="tcp://127.0.0.1:6001";
 	final String subscriberEndpointIpc = "ipc:///tmp/smmSubscriberEndpoint";
+	
+	private final Map<Integer, String> sampleMessageMap = new HashMap<Integer, String>();
+
 }
