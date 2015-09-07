@@ -18,7 +18,7 @@ import java.util.List;
 
 public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 
-	public PubSubBrokerConfigurationXml(String configFilename) {
+	public PubSubBrokerConfigurationXml(String configFilename) throws IOException {
 		 // Add a handler for XML files.
 		String tempBrokerName = "Broker";
 		List<BrokerEndpointPair> tempBrokerBindings = new ArrayList<BrokerEndpointPair>();
@@ -81,10 +81,7 @@ public class PubSubBrokerConfigurationXml implements PubSubBrokerConfiguration {
 		} catch (SAXException e) {
 			System.err.println("SAX Exception when parsing configuration file.");
 			e.printStackTrace();
-		} catch (IOException e) {
-			System.err.println("IO Exception when parsing configuration file.");
-			e.printStackTrace();
-		} 
+		}
 		
 		this.brokerName = tempBrokerName;
 		this.brokerBindings = tempBrokerBindings;

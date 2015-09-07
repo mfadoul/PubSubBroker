@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<pubSubBroker name="Main Broker">
+<pubSubBroker name="Main Broker (XML)">
 	<!-- Launch this broker with the specified endpoints. -->
 	<brokerBindings>
 		<connection name="localToMachine" 

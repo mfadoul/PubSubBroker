@@ -35,7 +35,7 @@ public class PubSubBrokerConfigurationJsonTest {
 
 	@Test
 	public final void testGetName() {
-		assertTrue("Main Broker".equals(pubSubBrokerConfiguration.getName()));
+		assertTrue("Main Broker (JSON)".equals(pubSubBrokerConfiguration.getName()));
 	}
 
 	@Test
@@ -103,7 +103,7 @@ public class PubSubBrokerConfigurationJsonTest {
 
 	@Test
 	public final void testToString() {
-		String expectedToString = "PubSubBrokerConfigurationJson [brokerName=Main Broker, brokerBindings=" +
+		String expectedToString = "PubSubBrokerConfigurationJson [brokerName=Main Broker (JSON), brokerBindings=" +
 	        "[BrokerConnection [name=localToMachine, publisherEndpoint=ipc:///tmp/smmPublisherEndpoint, " +
 			"subscriberEndpoint=ipc:///tmp/smmSubscriberEndpoint], BrokerConnection [name=tcpBased, " +
 	        "publisherEndpoint=tcp://*:6000, subscriberEndpoint=tcp://*:6001]], " +

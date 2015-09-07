@@ -29,7 +29,7 @@ public class PubSubBrokerConfigurationXmlTest {
 
 	@Test
 	public final void testGetName() {
-		assertEquals("Main Broker", pubSubBrokerConfiguration.getName());
+		assertEquals("Main Broker (XML)", pubSubBrokerConfiguration.getName());
 	}
 
 	@Test
@@ -97,7 +97,7 @@ public class PubSubBrokerConfigurationXmlTest {
 
 	@Test
 	public final void testToString() {
-		String expectedToString = "PubSubBrokerConfigurationXml [brokerName=Main Broker, brokerBindings=" +
+		String expectedToString = "PubSubBrokerConfigurationXml [brokerName=Main Broker (XML), brokerBindings=" +
 	        "[BrokerConnection [name=localToMachine, publisherEndpoint=ipc:///tmp/smmPublisherEndpoint, " +
 			"subscriberEndpoint=ipc:///tmp/smmSubscriberEndpoint], BrokerConnection [name=tcpBased, " +
 	        "publisherEndpoint=tcp://*:6000, subscriberEndpoint=tcp://*:6001]], " +

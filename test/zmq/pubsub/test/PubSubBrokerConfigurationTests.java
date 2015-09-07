@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import zmq.pubsub.BrokerTest;
 import zmq.pubsub.configuration.PubSubBrokerConfigurationJsonTest;
 import zmq.pubsub.configuration.PubSubBrokerConfigurationXmlTest;
 import zmq.pubsub.message.MessageMapJsonTest;
@@ -14,6 +15,7 @@ import zmq.pubsub.subscriber.SubscriberDataTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({ 
+	BrokerTest.class,
 	MessageMapTest.class, 
 	MessageMapJsonTest.class,
 	PubSubBrokerConfigurationJsonTest.class, 

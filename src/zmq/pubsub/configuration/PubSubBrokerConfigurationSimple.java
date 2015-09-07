@@ -3,12 +3,14 @@ package zmq.pubsub.configuration;
 public class PubSubBrokerConfigurationSimple implements PubSubBrokerConfiguration {
 
 	public PubSubBrokerConfigurationSimple(int xpubPort, int xsubPort) {
-		brokerConnection = new BrokerEndpointPair("Simple", "tcp://*:" + xpubPort, "tcp://*:" + xsubPort);
+		brokerConnection = new BrokerEndpointPair("SimpleEndpointPair", 
+				"tcp://*:" + Integer.toString(xpubPort), 
+				"tcp://*:" + Integer.toString(xsubPort));
 	}
 
 	@Override
 	public String getName() {
-		return "Simple Connection";
+		return "SimplePubSubBroker";
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package zmq.pubsub;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.zeromq.ZMQ;
@@ -13,7 +13,7 @@ import zmq.pubsub.configuration.PubSubBrokerConfigurationJson;
 import zmq.pubsub.configuration.PubSubBrokerConfigurationSimple;
 import zmq.pubsub.configuration.PubSubBrokerConfigurationXml;
 
-public class Broker {
+public class Broker implements Runnable {
 
 	// Initialize a broker by specifying two TCP ports
 	public Broker(int xpubPort, int xsubPort) {
@@ -21,19 +21,17 @@ public class Broker {
 	}
 
 	// Initialize a broker using an XML Configuration file
-	public Broker(String xmlConfigFilename) throws FileNotFoundException {
+	public Broker(String xmlConfigFilename) throws IOException {
 		this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationXml(xmlConfigFilename);
-		System.out.println("pubSubBroker object = " + this.pubSubBrokerConfiguration);		
 	}
 	
 	// Initialize a broker using a JSON Configuration file
-	public Broker(InputStream jsonInputStream) throws FileNotFoundException {
+	public Broker(InputStream jsonInputStream) {
 		this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationJson(jsonInputStream);
-		System.out.println("pubSubBroker object = " + this.pubSubBrokerConfiguration);		
 	}
 
-	public boolean initialize () {
-		
+	@Override
+	public void run() {
 		Context context = ZMQ.context(1);
 		this.xpubSocket = context.socket(ZMQ.XPUB);
 		this.xsubSocket = context.socket(ZMQ.XSUB);		
@@ -55,22 +53,41 @@ public class Broker {
 			System.out.println("Subscriber Socket: Binding to " + brokerConnection.getSubscriberEndpoint());
 			this.xpubSocket.bind(brokerConnection.getSubscriberEndpoint());
 		}
-		
+		initialized = true;
+
 		// Note: ZeroMQ doesn't care which socket is associated with the "frontend" vs. "backend".
 		ZMQ.proxy(xsubSocket, xpubSocket, null);
 		System.out.println("After ZMQ.proxy()");
-		
-		initialized = true;
-		return true;
 	}
-	
+
 	public boolean isInitialized () {
 		return initialized;
 	}
 	
+	// Clean things up before the object's end-of-life.
+	public void freeResources() {
+		if (this.xpubSocket != null) {
+			xpubSocket.close();
+			this.xpubSocket= null;
+		}
+		
+		if (this.xsubSocket != null) {
+			xsubSocket.close();
+			this.xsubSocket= null;
+		}
+		
+		this.initialized=false;
+	}
+	
+	@Override
+	public String toString() {
+		return "Broker [xpubSocket=" + xpubSocket + ", xsubSocket=" + xsubSocket + ", initialized=" + initialized
+				+ ", pubSubBrokerConfiguration=" + pubSubBrokerConfiguration + "]";
+	}
+
+	// Member variables
 	private Socket xpubSocket = null;
 	private Socket xsubSocket = null;
-		
 	private boolean initialized = false;
 	
 	// Broker Configuration
@@ -86,7 +103,7 @@ public class Broker {
     		// Use default configuration file
     		try {
     			broker = new Broker("data/PubSubBroker.json");
-    		} catch (FileNotFoundException e) {
+    		} catch (IOException e) {
     			e.printStackTrace();
     		}
     		break;
@@ -94,7 +111,7 @@ public class Broker {
     		// Configuration file specified
     		try {
     			broker = new Broker(args[0]);
-    		} catch (FileNotFoundException e) {
+    		} catch (IOException e) {
     			e.printStackTrace();
     		}
     		break;
@@ -121,12 +138,17 @@ public class Broker {
     	}
     	
     	if (broker != null) {
-        	System.out.println("Initializing broker.");
-	    	broker.initialize();
-	    	System.out.println("After initialization of broker.");
+        	System.out.println("Starting broker.");
+	    	broker.run();
+	    	System.out.println("After running of broker.");
     	} else {
     		System.err.println("Couldn't create Broker object");
     	}
     }
+
+	public PubSubBrokerConfiguration getPubSubBrokerConfiguration() {
+		return pubSubBrokerConfiguration;
+	}
+
 }
 
