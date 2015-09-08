@@ -11,6 +11,7 @@ import zmq.pubsub.message.MessageMapJsonTest;
 import zmq.pubsub.message.MessageMapTest;
 import zmq.pubsub.subscriber.SubscriberClientJsonTest;
 import zmq.pubsub.subscriber.SubscriberClientTest;
+import zmq.pubsub.subscriber.SubscriberDataBuilderTest;
 import zmq.pubsub.subscriber.SubscriberDataTest;
 
 @RunWith(Suite.class)
@@ -22,7 +23,9 @@ import zmq.pubsub.subscriber.SubscriberDataTest;
 	PubSubBrokerConfigurationXmlTest.class, 
 	SubscriberClientTest.class,
 	SubscriberClientJsonTest.class,
-	SubscriberDataTest.class})
+	SubscriberDataTest.class,
+	SubscriberDataBuilderTest.class
+	})
 public class PubSubBrokerConfigurationTests {
 
 }
