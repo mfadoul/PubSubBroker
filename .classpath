@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="/usr/local/share/java/zmq.jar"/>
 	<classpathentry kind="lib" path="/usr/local/lib"/>
 	<classpathentry kind="lib" path="/usr/local/share/java/gson-2.3.1.jar"/>
+	<classpathentry kind="lib" path="jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
