@@ -3,14 +3,8 @@ package zmq.pubsub.ui;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import java.awt.BorderLayout;
 import javax.swing.JButton;
-import javax.swing.BoxLayout;
-import javax.swing.JSplitPane;
 import javax.swing.JPanel;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
 import java.awt.FlowLayout;
 import javax.swing.JTextArea;
 

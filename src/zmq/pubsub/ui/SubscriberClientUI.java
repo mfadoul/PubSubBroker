@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import java.awt.BorderLayout;
-import javax.swing.JPanel;
 
 import org.zeromq.ZMQ.Socket;
 
@@ -72,6 +71,10 @@ public class SubscriberClientUI extends SubscriberClientJson {
 			}
 		}
 		list = new JList(messageNames.toArray());
+		
+		// Is this the correct way to initialize the list?
+		//list = new JList<String>((String[]) messageNames.toArray());
+		
 		list.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				List<String> selectedValuesList = list.getSelectedValuesList();

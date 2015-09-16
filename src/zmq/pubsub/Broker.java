@@ -30,6 +30,12 @@ public class Broker implements Runnable {
 		this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationJson(jsonInputStream);
 	}
 
+	// Initialize a broker using a JSON Configuration file
+	public Broker(final PubSubBrokerConfiguration pubSubBrokerConfiguration) {
+		this.pubSubBrokerConfiguration = pubSubBrokerConfiguration;
+	}
+
+	
 	@Override
 	public void run() {
 		Context context = ZMQ.context(1);
@@ -56,6 +62,7 @@ public class Broker implements Runnable {
 		initialized = true;
 
 		// Note: ZeroMQ doesn't care which socket is associated with the "frontend" vs. "backend".
+		
 		ZMQ.proxy(xsubSocket, xpubSocket, null);
 		System.out.println("After ZMQ.proxy()");
 	}
@@ -149,6 +156,5 @@ public class Broker implements Runnable {
 	public PubSubBrokerConfiguration getPubSubBrokerConfiguration() {
 		return pubSubBrokerConfiguration;
 	}
-
 }
 
