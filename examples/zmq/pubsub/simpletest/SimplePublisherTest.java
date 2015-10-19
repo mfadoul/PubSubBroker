@@ -1,12 +1,19 @@
 package zmq.pubsub.simpletest;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Random;
+import java.util.Set;
 
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Socket;
 
 import zmq.pubsub.MessageUtils;
+import zmq.pubsub.message.MessageMap;
+import zmq.pubsub.message.MessageMapJson;
 
 public class SimplePublisherTest {
 
@@ -19,6 +26,7 @@ public class SimplePublisherTest {
 	// Choose an endpoint here
 	public static String zmqEndpoint = zmqEndpointIpc;
 
+	public static MessageMap messageMap = null;
 
 	public SimplePublisherTest() {
 		// TODO Auto-generated constructor stub
@@ -28,7 +36,15 @@ public class SimplePublisherTest {
 		System.out.println("This is a simple publisher test");
 		
 		ZMQ.Context context = ZMQ.context (1);
-
+		try {
+			File messageMapFile = new File("data/MessageMap.json");
+			InputStream inputStream;
+			inputStream = new FileInputStream(messageMapFile);
+			messageMap = new MessageMapJson(inputStream);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Socket publisherSocket = context.socket(ZMQ.PUB);
 		publisherSocket.connect(zmqEndpoint);
 
@@ -45,8 +61,11 @@ public class SimplePublisherTest {
 
 	
 	public static boolean sendMessage(Socket socket) {
+		Set<Integer> messages = messageMap.getAllMessageIds();
 		
-		int messageId = Math.abs(random.nextInt()) % 10;
+		
+		int messageIndex = Math.abs(random.nextInt()) % messages.size();
+		int messageId = (int) messages.toArray()[messageIndex];
 		messageCount++;
 		
 		//String messageHeader = Integer.toString(messageId);
@@ -62,4 +81,5 @@ public class SimplePublisherTest {
 		System.out.println("Send (ID=" + messageId + ").  Contents=" + messageContents);
 		return true;
 	}
+	
 }
