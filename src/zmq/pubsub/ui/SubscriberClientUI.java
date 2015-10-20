@@ -13,6 +13,7 @@ import org.zeromq.ZMQ.Socket;
 
 import zmq.pubsub.MessageUtils;
 import zmq.pubsub.message.MessageMap;
+import zmq.pubsub.subscriber.SubscriberClient;
 import zmq.pubsub.subscriber.SubscriberClientJson;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
@@ -28,11 +29,10 @@ import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 
-// TODO: Make SubscriberClientJson a member variable instead of using "extends"
-
-public class SubscriberClientUI extends SubscriberClientJson implements Runnable {
+public class SubscriberClientUI implements Runnable {
 
 	private JFrame frmSubscriberClient;
+	private SubscriberClient subscriberClient = null;
 
 	/**
 	 * Launch the application.
@@ -55,13 +55,13 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 	 */
 	public SubscriberClientUI() {
 		// Load the subscriber configuration file.
-		super("data/SubscriberConfig.json");
+		subscriberClient = new SubscriberClientJsonUi("data/SubscriberConfig.json");
 		initialize();
 		
 		// Start the listener thread
 		ZMQ.Context context = ZMQ.context (1);
 		this.subscriberSocket = context.socket(ZMQ.SUB);
-		this.subscriberSocket.connect(this.getSubscriberEndpoint());
+		this.subscriberSocket.connect(subscriberClient.getSubscriberEndpoint());
 
 		this.startSubscriberThread();
 	}
@@ -88,7 +88,7 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 
 		ArrayList<String> messageNames = new ArrayList<String>();
 		
-		MessageMap messageMap = this.getMessageMap();
+		MessageMap messageMap = subscriberClient.getMessageMap();
 		for (Integer messageId: messageMap.getAllMessageIds()) {
 			String label;
 			try {
@@ -106,14 +106,14 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 		textConsoleArea = new JTextArea();
 		frmSubscriberClient.getContentPane().add(textConsoleArea, BorderLayout.SOUTH);
 				
-		for (final Integer messageId: this.getMessageMap().getAllMessageIds()) {
+		for (final Integer messageId: subscriberClient.getMessageMap().getAllMessageIds()) {
 			String messageName;
 			try {
-				messageName = this.getMessageMap().getMessageName(messageId);
+				messageName = subscriberClient.getMessageMap().getMessageName(messageId);
 				MessageCheckBox messageCheckBox = new MessageCheckBox(messageId, messageName);
 				//messageSubscriptionListScrollPane.add(messageCheckBox);
 				
-				messageCheckBox.setSelected(this.isSubscribed(messageId));
+				messageCheckBox.setSelected(subscriberClient.isSubscribed(messageId));
 				
 				messageCheckBox.addActionListener(new ActionListener() {
 						@Override
@@ -123,13 +123,13 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 								
 								System.out.println("Action: Subscribed to " + messageCheckBox.getMessageName());
 								textArea.append("Action: Subscribed to " + messageCheckBox.getMessageName() + "\n");
-								subscribe(messageId);
+								subscriberClient.subscribe(messageId);
 
 							} else {
 								//message
 								System.out.println("Action: Unsubscribed from " + messageCheckBox.getMessageName());
 								textArea.append("Action: Unsubscribed from " + messageCheckBox.getMessageName() + "\n");
-								unsubscribe(messageId);
+								subscriberClient.unsubscribe(messageId);
 							}
 						}
 					});
@@ -155,16 +155,6 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 		mnFile.add(mntmClear);
 	}
 
-	@Override
-	protected boolean receiveMessage(Socket subscriberSocket) {
-		this.textArea.append("Waiting for next message...");
-		int messageId = MessageUtils.byteArrayToInt(subscriberSocket.recv());
-		String messageContents = subscriberSocket.recvStr();
-		
-		System.out.println("Receive (ID=" + messageId + ").  Contents=" + messageContents);
-		this.textArea.append("Receive (ID=" + messageId + ").  Contents=" + messageContents);
-		return true;
-	}
 
 	
 	private class SwingActionClearConfiguration extends AbstractAction {
@@ -176,10 +166,28 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 		public void actionPerformed(ActionEvent e) {
 		}
 	}
+	
+	private class SubscriberClientJsonUi extends SubscriberClientJson {
+
+		public SubscriberClientJsonUi(String subscriberConfigFilename) {
+			super(subscriberConfigFilename);
+		}
+		
+		@Override
+		protected boolean receiveMessage(Socket subscriberSocket) {
+			//textArea.append("Waiting for next message...");
+			int messageId = MessageUtils.byteArrayToInt(subscriberSocket.recv());
+			String messageContents = subscriberSocket.recvStr();
+			
+			System.out.println("Receive (ID=" + messageId + ").  Contents=" + messageContents);
+			textArea.append("Receive (ID=" + messageId + ").  Contents=" + messageContents + "\n");
+			return true;
+		}
+
+		
+	}
+	
 	private class SwingActionLoadJson extends AbstractAction {
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 6575589615318707331L;
 		public SwingActionLoadJson() {
 			putValue(NAME, "Load JSON");
@@ -238,6 +246,6 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 	@Override
 	public void run() {
 		this.textArea.append("Starting run();");
-		this.subscriberLoop();		
+		subscriberClient.subscriberLoop();		
 	}
 }
