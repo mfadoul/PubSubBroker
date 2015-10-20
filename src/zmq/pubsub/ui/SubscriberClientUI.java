@@ -3,14 +3,11 @@ package zmq.pubsub.ui;
 import java.awt.EventQueue;
 //import java.awt.List;
 import java.io.IOException;
-import java.util.List;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JList;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Socket;
 
@@ -20,21 +17,16 @@ import zmq.pubsub.subscriber.SubscriberClientJson;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-
 import javax.swing.Action;
 import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
-import javax.swing.JTextPane;
 
 // TODO: Make SubscriberClientJson a member variable instead of using "extends"
 
@@ -91,9 +83,7 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 		
 		lblSubscriptions = new JLabel("Subscriptions");
 		toolBar.add(lblSubscriptions);
-		//messageScrollPane.setPreferredSize(new Dimension(200, 110));
 
-		//messageScrollPane.add(toolBar);
 		frmSubscriberClient.getContentPane().add(messageScrollPane, BorderLayout.WEST);
 
 		ArrayList<String> messageNames = new ArrayList<String>();
@@ -105,40 +95,17 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 				label = messageMap.getMessageName(messageId) + ": " + messageId.toString();
 				messageNames.add(label);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
-		
-//		list = new JList(messageNames.toArray());
-		
-		// Is this the correct way to initialize the list?
-		//list = new JList<String>((String[]) messageNames.toArray());
-//		
-//		list.addListSelectionListener(new ListSelectionListener() {
-//			public void valueChanged(ListSelectionEvent e) {
-//				List<String> selectedValuesList = list.getSelectedValuesList();
-//				String selectionString = selectedValuesList.toString();
-//				textArea.setText(selectionString);
-//			}
-//		});
-//
-		//frmSubscriberClient.getContentPane().add(list, BorderLayout.EAST);
-		
+				
 		textArea = new JTextArea();
 		textArea.setLineWrap(true);
 		frmSubscriberClient.getContentPane().add(textArea, BorderLayout.CENTER);
 		
 		textConsoleArea = new JTextArea();
 		frmSubscriberClient.getContentPane().add(textConsoleArea, BorderLayout.SOUTH);
-		
-		//messageSubscriptionListScrollPane = new MessageSubscriptionListScrollPane();
-		//messageSubscriptionListScrollPane.setPreferredSize(new Dimension(200, 200));
-		//messageSubscriptionListScrollPane.setVisible(true);
-		
-		//JList<MessageCheckBox> listOfCheckBoxes = new JList<MessageCheckBox>();
-		
+				
 		for (final Integer messageId: this.getMessageMap().getAllMessageIds()) {
 			String messageName;
 			try {
@@ -151,7 +118,6 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 				messageCheckBox.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							//JCheckBox cb = (JCheckBox) e.getSource();
 							MessageCheckBox messageCheckBox = (MessageCheckBox) e.getSource();
 							if (messageCheckBox.isSelected()) {
 								
@@ -168,20 +134,12 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 						}
 					});
 				
-				toolBar.add(messageCheckBox);
-				
-				//listOfCheckBoxes.add(messageCheckBox);
+				toolBar.add(messageCheckBox);				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
-		//System.out.println("Number of message check boxes = " + listOfCheckBoxes.getComponentCount());
-		//frmSubscriberClient.getContentPane().add(listOfCheckBoxes, BorderLayout.WEST);
-		//messageSubscriptionListScrollPane.add(listOfCheckBoxes);
-		//frmSubscriberClient.getContentPane().add(messageSubscriptionListScrollPane, BorderLayout.WEST);
-
 		menuBar = new JMenuBar();
 		frmSubscriberClient.setJMenuBar(menuBar);
 		
@@ -210,6 +168,7 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 
 	
 	private class SwingActionClearConfiguration extends AbstractAction {
+		private static final long serialVersionUID = -7200508333403727798L;
 		public SwingActionClearConfiguration() {
 			putValue(NAME, "Clear");
 			putValue(SHORT_DESCRIPTION, "Clear Subscriber Data (TODO)");
@@ -218,6 +177,10 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 		}
 	}
 	private class SwingActionLoadJson extends AbstractAction {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6575589615318707331L;
 		public SwingActionLoadJson() {
 			putValue(NAME, "Load JSON");
 			putValue(SHORT_DESCRIPTION, "Load a JSON subscriber config file (TODO)");
@@ -265,12 +228,9 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 	private JMenuItem mntmClear;
 	private final Action swingActionClear = new SwingActionClearConfiguration();
 	private final Action swingActionLoadJson = new SwingActionLoadJson();
-	private JScrollPane messageScrollPane;
-	
-	private MessageSubscriptionListScrollPane messageSubscriptionListScrollPane;
+	private JScrollPane messageScrollPane;	
 	private JLabel lblSubscriptions;
 	private JTextArea textConsoleArea;
-	private class MessageSubscriptionListScrollPane extends JScrollPane {}
 
 	Socket subscriberSocket = null;
 	private Thread subscriberThread = null;
@@ -280,6 +240,4 @@ public class SubscriberClientUI extends SubscriberClientJson implements Runnable
 		this.textArea.append("Starting run();");
 		this.subscriberLoop();		
 	}
-	
-
 }
