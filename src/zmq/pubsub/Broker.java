@@ -1,5 +1,7 @@
 package zmq.pubsub;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -20,9 +22,16 @@ public class Broker implements Runnable {
 		this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationSimple(xpubPort, xsubPort);
 	}
 
-	// Initialize a broker using an XML Configuration file
-	public Broker(String xmlConfigFilename) throws IOException {
-		this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationXml(xmlConfigFilename);
+	// Initialize a broker using an XML or JSON Configuration file
+	public Broker(String configFilename) throws IOException {
+		if ((configFilename != null) && (configFilename.endsWith(".json"))) {
+			File initialFile = new File(configFilename);
+			InputStream inputStream = new FileInputStream(initialFile);
+			this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationJson(inputStream);
+		} else {
+			// Try XML
+			this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationXml(configFilename);
+		}
 	}
 	
 	// Initialize a broker using a JSON Configuration file

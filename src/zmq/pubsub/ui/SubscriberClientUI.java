@@ -164,6 +164,7 @@ public class SubscriberClientUI implements Runnable {
 			putValue(SHORT_DESCRIPTION, "Clear Subscriber Data (TODO)");
 		}
 		public void actionPerformed(ActionEvent e) {
+			textArea.setText("");
 		}
 	}
 	

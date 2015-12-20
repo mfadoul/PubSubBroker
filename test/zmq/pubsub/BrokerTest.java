@@ -122,7 +122,12 @@ public class BrokerTest {
 			fail("The file " + pubSubBrokerJsonFilename + " should exist.");			
 		}
 
-		broker = new Broker(brokerJsonInputStream);
+		try {
+			broker = new Broker(pubSubBrokerJsonFilename);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		assertNotNull(broker);
 		
 		PubSubBrokerConfiguration pubSubBrokerConfiguration = broker.getPubSubBrokerConfiguration();
