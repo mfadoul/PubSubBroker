@@ -46,26 +46,17 @@ public abstract class SubscriberClient implements SubscriberClientInterface {
 	}
 
 	// Public methods
-	/* (non-Javadoc)
-	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#getSubscriberEndpoint()
-	 */
 	@Override
 	public String getSubscriberEndpoint() {
 		return this.subscriberEndpoint;
 	}
 	
-	/* (non-Javadoc)
-	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#subscribe(int)
-	 */
 	@Override
 	public void subscribe(final int messageId) {
 		messageIds.add(messageId);
 		subscriberSocket.subscribe(MessageUtils.intToByteArray(messageId));
 	}
 	
-	/* (non-Javadoc)
-	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#subscribe(java.util.Set)
-	 */
 	@Override
 	public void subscribe(final Set<Integer> messageIds) {
 		this.messageIds.addAll(messageIds);
@@ -74,18 +65,12 @@ public abstract class SubscriberClient implements SubscriberClientInterface {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#unsubscribe(int)
-	 */
 	@Override
 	public void unsubscribe(final int messageId) {
 		this.messageIds.remove(messageId);
 		subscriberSocket.unsubscribe(MessageUtils.intToByteArray(messageId));
 	}
 	
-	/* (non-Javadoc)
-	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#unsubscribeAll()
-	 */
 	@Override
 	public void unsubscribeAll() {
 		for (Integer messageId: this.getSubscriptions()) {
@@ -139,9 +124,6 @@ public abstract class SubscriberClient implements SubscriberClientInterface {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#isSubscribed(int)
-	 */
 	@Override
 	public boolean isSubscribed(final int messageId) {
 		if (this.messageIds.contains(messageId))
@@ -150,9 +132,6 @@ public abstract class SubscriberClient implements SubscriberClientInterface {
 			return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#isSubscribed(int)
-	 */
 	@Override
 	public boolean isSubscribed(final String messageName) {
 		if (this.messageMap != null) {
@@ -171,17 +150,11 @@ public abstract class SubscriberClient implements SubscriberClientInterface {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#getSubscriptions()
-	 */
 	@Override
 	public Set<Integer> getSubscriptions() {
 		return this.messageIds;
 	}
 	
-	/* (non-Javadoc)
-	 * @see zmq.pubsub.subscriber.SubscriberClientInterface#subscriberLoop()
-	 */
 	@Override
 	public final boolean subscriberLoop() {
 		while (true) {
@@ -189,6 +162,12 @@ public abstract class SubscriberClient implements SubscriberClientInterface {
 		}
 	}
 	
+	/**
+	 * A method for child classes to process an incoming message.
+	 * This is called in {@link #subscriberLoop()}
+	 * @param subscriberSocket
+	 * @return 
+	 */
 	protected abstract boolean receiveMessage(Socket subscriberSocket);
 	
 	// Designated endpoint for subscriptions (e.g. "tcp://127.0.0.1:6001")

@@ -15,14 +15,27 @@ import zmq.pubsub.configuration.PubSubBrokerConfigurationJson;
 import zmq.pubsub.configuration.PubSubBrokerConfigurationSimple;
 import zmq.pubsub.configuration.PubSubBrokerConfigurationXml;
 
+/**
+ * This class makes is possible to have a many-to-many relationship
+ * between publishers and subscribers.  It also supports multiple
+ * connection methods (e.g. TCP, UDP, shared memory, in process)
+ */
 public class Broker implements Runnable {
 
-	// Initialize a broker by specifying two TCP ports
+	/**
+	 * Initialize a broker by specifying two TCP ports
+	 * @param xpubPort A default port for subscribers to connect
+	 * @param xsubPort A default port for publishers to connect
+	 */
 	public Broker(int xpubPort, int xsubPort) {
 		this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationSimple(xpubPort, xsubPort);
 	}
 
-	// Initialize a broker using an XML or JSON Configuration file
+	/**
+	 * Initialize a broker using an XML or JSON Configuration file
+	 * @param configFilename
+	 * @throws IOException
+	 */
 	public Broker(String configFilename) throws IOException {
 		if ((configFilename != null) && (configFilename.endsWith(".json"))) {
 			File initialFile = new File(configFilename);
@@ -34,17 +47,46 @@ public class Broker implements Runnable {
 		}
 	}
 	
-	// Initialize a broker using a JSON Configuration file
+	/**
+	 * Initialize a broker using a JSON Configuration file
+	 * @param jsonInputStream
+	 */
 	public Broker(InputStream jsonInputStream) {
 		this.pubSubBrokerConfiguration = new PubSubBrokerConfigurationJson(jsonInputStream);
 	}
 
-	// Initialize a broker using a JSON Configuration file
+	/**
+	 * Initialize a broker using a JSON Configuration file
+	 * @param pubSubBrokerConfiguration
+	 */
 	public Broker(final PubSubBrokerConfiguration pubSubBrokerConfiguration) {
 		this.pubSubBrokerConfiguration = pubSubBrokerConfiguration;
 	}
 
-	
+	/**
+	 * @return
+	 */
+	public PubSubBrokerConfiguration getPubSubBrokerConfiguration() {
+		return pubSubBrokerConfiguration;
+	}
+
+	/**
+	 * Clean things up before the object's end-of-life
+	 */
+	public void freeResources() {
+		if (this.xpubSocket != null) {
+			xpubSocket.close();
+			this.xpubSocket= null;
+		}
+		
+		if (this.xsubSocket != null) {
+			xsubSocket.close();
+			this.xsubSocket= null;
+		}
+		
+		this.initialized=false;
+	}
+		
 	@Override
 	public void run() {
 		Context context = ZMQ.context(1);
@@ -78,21 +120,6 @@ public class Broker implements Runnable {
 
 	public boolean isInitialized () {
 		return initialized;
-	}
-	
-	// Clean things up before the object's end-of-life.
-	public void freeResources() {
-		if (this.xpubSocket != null) {
-			xpubSocket.close();
-			this.xpubSocket= null;
-		}
-		
-		if (this.xsubSocket != null) {
-			xsubSocket.close();
-			this.xsubSocket= null;
-		}
-		
-		this.initialized=false;
 	}
 	
 	@Override
@@ -161,9 +188,5 @@ public class Broker implements Runnable {
     		System.err.println("Couldn't create Broker object");
     	}
     }
-
-	public PubSubBrokerConfiguration getPubSubBrokerConfiguration() {
-		return pubSubBrokerConfiguration;
-	}
 }
 

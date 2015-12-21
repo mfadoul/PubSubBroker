@@ -70,7 +70,11 @@ public final class SubscriberData {
 			return this;
 		}
 
-		// Initialize with JSON input
+		/**
+		 * Initialize with JSON input
+		 * @param jsonInputStream
+		 * @return
+		 */
 		public Builder jsonInputStream (InputStream jsonInputStream) {
 			JsonReader jsonReader = null;
 
@@ -149,9 +153,13 @@ public final class SubscriberData {
 			return this;
 		}
 		
-		// Helper method for reading from JSON
-		// This reads a message entry in the subscription list file.
-		// @return whether the subscriber could successfully subscribe to a new messageId.
+		/**
+		 * Helper method for reading from JSON. This reads a message entry 
+		 * in the subscription list file.
+		 * @param jsonReader
+		 * @return whether the subscriber could successfully subscribe to a new messageId
+		 * @throws IOException
+		 */
 		private boolean readMessageFromJson(JsonReader jsonReader) throws IOException {
 			Integer messageId = null;
 			String messageName = null;
@@ -185,11 +193,13 @@ public final class SubscriberData {
 		// Build method
 		public SubscriberData build() {
 			return new SubscriberData(this);
-		}
-		
+		}	
 	}
 	
-	// Private constructor is only accessible by builder
+	/**
+	 * Private constructor is only accessible by builder
+	 * @param builder
+	 */
 	private SubscriberData(Builder builder) {
 		this.subscriberEndpoint = builder.subscriberEndpoint;
 		this.messageIds = builder.messageIds;

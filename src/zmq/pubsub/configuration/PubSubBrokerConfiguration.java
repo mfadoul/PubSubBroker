@@ -1,7 +1,12 @@
 package zmq.pubsub.configuration;
 
+/**
+ *
+ */
 public interface PubSubBrokerConfiguration {
-	// General parameters
+	/**
+	 * @return the name of the broker
+	 */
 	String getName();
 	
 	// Brokers

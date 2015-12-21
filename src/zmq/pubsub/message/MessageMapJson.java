@@ -6,13 +6,18 @@ import java.io.InputStreamReader;
 
 import com.google.gson.stream.JsonReader;
 
-// This class inherits from the MessageMap.  The extra functionality here is for
-// Loading the MessageMap from JSON.
-// * Question: Is there a better design pattern for separating the base functionality
-//   from the JSON loader methods?
-
+// 
+/**
+ * This class inherits from the MessageMap.  The extra functionality here is for
+ * Loading the MessageMap from JSON.
+ * Question: Is there a better design pattern for separating the base functionality
+ *   from the JSON loader methods?
+ */
 public class MessageMapJson extends MessageMap {
 
+	/**
+	 * @param jsonInputStream
+	 */
 	public MessageMapJson(InputStream jsonInputStream) {
 		try {
 			int groupNumber = 0;
@@ -43,6 +48,11 @@ public class MessageMapJson extends MessageMap {
 		}
 	}
 
+	/**
+	 * @param jsonReader
+	 * @param groupNumber
+	 * @throws IOException
+	 */
 	private void readMessageGroup(JsonReader jsonReader, int groupNumber) throws IOException {
 		jsonReader.beginObject();
 

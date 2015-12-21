@@ -7,6 +7,7 @@ Tasks
   * Implement (e.g. JSON reader, etc)
   * Unit tests
   * Integrate with other functionality
+* Finish a Publisher UI example
 * Create adapter for SMM-functionality to use ZeroMQ.
 * Build more unit tests.  (When isn't this a task?)
 * Create unit tests that spawn other components (e.g. broker) so that message passing can be tested.

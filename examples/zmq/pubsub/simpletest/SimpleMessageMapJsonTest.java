@@ -8,12 +8,14 @@ import java.io.InputStream;
 import zmq.pubsub.message.MessageMap;
 import zmq.pubsub.message.MessageMapJson;
 
-public class SimpleMessageMapJsonTest {
+/**
+ *
+ */
+public final class SimpleMessageMapJsonTest {
 
-	public SimpleMessageMapJsonTest() {
-		// TODO Auto-generated constructor stub
-	}
-
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		File initialFile = new File("data/MessageMap.json");
 		InputStream inputStream;
@@ -25,7 +27,5 @@ public class SimpleMessageMapJsonTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
-
 }

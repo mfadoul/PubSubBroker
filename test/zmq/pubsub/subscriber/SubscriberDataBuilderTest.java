@@ -2,7 +2,9 @@ package zmq.pubsub.subscriber;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -91,6 +93,9 @@ public class SubscriberDataBuilderTest extends Builder {
 		
 	}
 
+	/**
+	 * Note: This tests both the jsonInputFilename and jsonInputStream builders
+	 */
 	@Test
 	public final void testJsonInputFilename() {
 		SubscriberData.Builder builder = new Builder();
@@ -99,11 +104,53 @@ public class SubscriberDataBuilderTest extends Builder {
 
 		// Among other things...
 		assertEquals("tcp://127.0.0.1:6001", subscriberData.getSubscriberEndpoint());
+		assertTrue(subscriberData.getMessageMap().hasMessageName("deleteEntity"));
+		assertTrue(subscriberData.getMessageMap().hasMessageName("updateEntity"));
+		assertTrue(subscriberData.getMessageMap().hasMessageName("setWind"));
+		assertTrue(subscriberData.getMessageMap().hasMessageId(4));
+		assertTrue(subscriberData.getMessageMap().hasMessageId(5));
+		assertTrue(subscriberData.getMessageMap().hasMessageId(1002));
+		assertTrue(subscriberData.getMessageMap().hasMessageId(1003));
+
+		// Even though these are in the JSON file, they don't actually exist, so they will fail.
+		assertFalse(subscriberData.getMessageMap().hasMessageName("fireWeapon"));
+		assertFalse(subscriberData.getMessageMap().hasMessageName("updateTime"));
+		assertFalse(subscriberData.getMessageMap().hasMessageId(6));
+		
+		// Also assert that non-existent messages aren't being returned as valid.
+		assertFalse(subscriberData.getMessageMap().hasMessageName("fakeMessage"));
+		assertFalse(subscriberData.getMessageMap().hasMessageName(null));
+		assertFalse(subscriberData.getMessageMap().hasMessageName(""));
+		assertFalse(subscriberData.getMessageMap().hasMessageId(-1000));
+		assertFalse(subscriberData.getMessageMap().hasMessageId(9999999));
+
 	}
 
 	@Test
-	public final void testJsonInputStream() {
-		fail("Not yet implemented"); // TODO
+	public final void testNonexistentJsonInputFilename() {
+		final String nonexistentFilename = "data/NonexistentSubscriberConfig.json";
+		
+		// Redirect standard out.
+		PrintStream originalStdErr = System.err;
+
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	    PrintStream printStream = new PrintStream(baos);
+	    
+	    // Tell Java to use your special stream
+	    System.setErr(printStream);
+	 
+
+		SubscriberData.Builder builder = new Builder();
+		builder.jsonInputFilename(nonexistentFilename);
+		subscriberData = builder.build();
+
+		// Put things back
+	    System.out.flush();
+	    System.setErr(originalStdErr);
+	    
+	    assertTrue(baos.toString().contains(
+	    		"java.io.FileNotFoundException: " + nonexistentFilename + " (No such file or directory)"
+	    		));	    
 	}
 
 	@Test

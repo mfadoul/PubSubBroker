@@ -7,12 +7,14 @@ import java.io.InputStream;
 
 import zmq.pubsub.configuration.PubSubBrokerConfigurationJson;
 
+/**
+ *
+ */
 public class SimplePubSubBrokerConfigurationJsonTest {
 
-	public SimplePubSubBrokerConfigurationJsonTest() {
-		// TODO Auto-generated constructor stub
-	}
-
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		File initialFile = new File("data/PubSubBroker.json");
 		InputStream inputStream;
@@ -24,7 +26,5 @@ public class SimplePubSubBrokerConfigurationJsonTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
-
 }

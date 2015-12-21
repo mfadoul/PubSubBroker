@@ -4,6 +4,10 @@ import org.zeromq.ZMQ.Socket;
 
 import zmq.pubsub.MessageUtils;
 
+/**
+ * A simple subscriber that prints out the each incoming message
+ *
+ */
 public class SubscriberClientSimple extends SubscriberClient {
 
 	@Override

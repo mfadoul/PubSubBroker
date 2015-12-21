@@ -1,5 +1,8 @@
 package zmq.pubsub.message;
 
+/**
+ * 
+ */
 public abstract class Message {
 
 	public Message(int messageId) {

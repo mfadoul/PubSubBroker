@@ -9,7 +9,6 @@ public class SubscriberClientJsonSimple extends SubscriberClientJson {
 	public SubscriberClientJsonSimple(String subscriberConfigFilename) {
 		super(subscriberConfigFilename);
 	}
-
 	
 	public SubscriberClientJsonSimple(SubscriberData subscriberData) {
 		super(subscriberData);

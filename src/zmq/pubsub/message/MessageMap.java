@@ -8,9 +8,17 @@ import java.util.Set;
 // A class for mapping between message IDs (integers) and message Names (Strings)
 public class MessageMap {
 
+	/**
+	 * Constructor
+	 */
 	public MessageMap() {
 	}
 
+	/**
+	 * Add an id/name pair to the message map
+	 * @param messageId integer value for the new message
+	 * @param messageName string representation of the message name
+	 */
 	public void addMessage(int messageId, String messageName) {
 		// Before adding the message, remove any instances of the messageName
 		// so that there are not any duplicates.
@@ -25,10 +33,18 @@ public class MessageMap {
 		
 		map.put(messageId, messageName);
 	}
+	/**
+	 * @param messageId
+	 */
 	public void removeMessage(int messageId) {
 		map.remove(messageId);
 	}
 	
+	/**
+	 * @param messageId
+	 * @return
+	 * @throws IOException
+	 */
 	public String getMessageName(int messageId) throws IOException {
 		final String name = map.get(messageId);
 		if (name != null) {
@@ -38,8 +54,12 @@ public class MessageMap {
 		}
 	}
 	
-	// Returns the first messageId that is associated with a messageName.
-	// Hopefully, each messageName maps to a single messageId.
+	/**
+	 * Hopefully, each messageName maps to a single messageId.
+	 * @param messageName a string indicating the message name
+	 * @return the first messageId that is associated with a messageName.
+	 * @throws IOException
+	 */
 	public int getMessageId(String messageName) throws IOException {
 		// Check for a null value
 		if (messageName != null) {
@@ -60,16 +80,25 @@ public class MessageMap {
 		throw (new IOException("Could not find messageName [" + messageName + "]"));
 	}
 	
-	// Return true if the messageId exists as a key in the map.
+	/**
+	 * @param messageId
+	 * @return true if the messageId exists as a key in the map
+	 */
 	public boolean hasMessageId(int messageId) {
 		return map.containsKey(messageId);
 	}
 	
-	// Return true if the messageId exists as a key in the map.
+	/**
+	 * @param messageName
+	 * @return true if the messageName exists as a key in the map
+	 */
 	public boolean hasMessageName(String messageName) {
 		return map.containsValue(messageName);
 	}
 	
+	/**
+	 * @return
+	 */
 	public Set<Integer> getAllMessageIds() {
 		return this.map.keySet();
 	}

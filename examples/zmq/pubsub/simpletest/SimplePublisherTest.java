@@ -15,26 +15,25 @@ import zmq.pubsub.MessageUtils;
 import zmq.pubsub.message.MessageMap;
 import zmq.pubsub.message.MessageMapJson;
 
-public class SimplePublisherTest {
+/**
+ *
+ */
+public final class SimplePublisherTest {
 
 	public static int messageCount = 0;
 	public static Random random = new Random(System.nanoTime());
-	
+
 	public static String zmqEndpointIpc = "ipc:///tmp/smmPublisherEndpoint";
 	public static String zmqEndpointTcp = "tcp://127.0.0.1:6000";
-	
+
 	// Choose an endpoint here
 	public static String zmqEndpoint = zmqEndpointIpc;
 
 	public static MessageMap messageMap = null;
 
-	public SimplePublisherTest() {
-		// TODO Auto-generated constructor stub
-	}
-
 	public static void main(String[] args) {
 		System.out.println("This is a simple publisher test");
-		
+
 		ZMQ.Context context = ZMQ.context (1);
 		try {
 			File messageMapFile = new File("data/MessageMap.json");
@@ -59,27 +58,25 @@ public class SimplePublisherTest {
 		}
 	}
 
-	
+	/**
+	 * @param socket
+	 * @return
+	 */
 	public static boolean sendMessage(Socket socket) {
 		Set<Integer> messages = messageMap.getAllMessageIds();
-		
-		
+
 		int messageIndex = Math.abs(random.nextInt()) % messages.size();
 		int messageId = (int) messages.toArray()[messageIndex];
 		messageCount++;
-		
-		//String messageHeader = Integer.toString(messageId);
-		
+
 		Date date = new java.util.Date();
-		
+
 		String messageContents = Integer.toString(messageCount) + ", Time = " + date.toString() + ", Published to [" + zmqEndpoint + "]";
-		
-		//socket.send(messageHeader, ZMQ.SNDMORE);
+
 		socket.send(MessageUtils.intToByteArray(messageId), ZMQ.SNDMORE);
 		socket.send(messageContents, 0);
-		
+
 		System.out.println("Send (ID=" + messageId + ").  Contents=" + messageContents);
 		return true;
 	}
-	
 }
