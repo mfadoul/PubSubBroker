@@ -31,3 +31,16 @@ java -classpath "/usr/local/share/java/zmq.jar:PubSubBroker.jar" zmq.pubsub.simp
 
 * Running the Publisher:
 java -classpath "/usr/local/share/java/zmq.jar:PubSubBroker.jar" zmq.pubsub.simpletest.SimplePublisherTest
+
+------------------------------------
+Dependencies:
+* ZeroMQ (Java Bindings)
+  * zmq.jar (JZMQ)
+  * https://github.com/zeromq/jzmq
+* GSON 2.3.1
+  * gson-2.3.1.jar
+  * https://github.com/google/gson
+* JGoodies Forms 1.8.0
+  * jgoodies-forms-1.8.0.jar
+  * http://www.jgoodies.com/freeware/libraries/forms/
+
