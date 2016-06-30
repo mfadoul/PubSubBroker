@@ -38,7 +38,8 @@ public class SubscriberDataBuilderTest extends Builder {
 
 	@Test
 	public final void testBuilder() {
-		fail("Not yet implemented"); // TODO
+		SubscriberData.Builder builder = new Builder();
+		assertNotNull(builder);
 	}
 
 	@Test
@@ -151,11 +152,6 @@ public class SubscriberDataBuilderTest extends Builder {
 	    assertTrue(baos.toString().contains(
 	    		"java.io.FileNotFoundException: " + nonexistentFilename + " (No such file or directory)"
 	    		));	    
-	}
-
-	@Test
-	public final void testBuild() {
-		SubscriberData.Builder builder = new Builder();
 	}
 
 	private SubscriberData subscriberData;

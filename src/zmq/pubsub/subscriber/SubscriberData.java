@@ -64,7 +64,6 @@ public final class SubscriberData {
 				jsonInputStream = new FileInputStream(jsonInputFile);
 				this.jsonInputStream(jsonInputStream);
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return this;
@@ -125,11 +124,9 @@ public final class SubscriberData {
 					inputStream = new FileInputStream(initialFile);
 					messageMap = new MessageMapJson(inputStream);
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					
 					// Technically, the application can survive this, so we don't need to throw
 					// an IllegalStateException.
+					e.printStackTrace();
 				}
 				
 				// Convert messageNames to messageIds

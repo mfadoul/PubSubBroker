@@ -14,7 +14,7 @@ import zmq.pubsub.message.MessageMapJson;
 public final class SimpleMessageMapJsonTest {
 
 	/**
-	 * @param args
+	 * @param args No command line arguments are used
 	 */
 	public static void main(String[] args) {
 		File initialFile = new File("data/MessageMap.json");
@@ -24,7 +24,6 @@ public final class SimpleMessageMapJsonTest {
 			MessageMap messageMap = new MessageMapJson(inputStream);
 			System.out.println("pubSubBroker object = " + messageMap);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

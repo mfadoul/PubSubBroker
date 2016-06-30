@@ -23,7 +23,6 @@ public class SimplePubSubBrokerConfigurationJsonTest {
 			PubSubBrokerConfigurationJson pubSubBrokerConfigurationJson = new PubSubBrokerConfigurationJson(inputStream);
 			System.out.println("pubSubBroker object = " + pubSubBrokerConfigurationJson);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

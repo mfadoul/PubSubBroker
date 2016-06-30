@@ -41,7 +41,6 @@ public final class SimplePublisherTest {
 			inputStream = new FileInputStream(messageMapFile);
 			messageMap = new MessageMapJson(inputStream);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Socket publisherSocket = context.socket(ZMQ.PUB);
@@ -52,7 +51,6 @@ public final class SimplePublisherTest {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

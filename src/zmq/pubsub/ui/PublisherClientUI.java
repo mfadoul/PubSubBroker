@@ -7,6 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.FlowLayout;
 import javax.swing.JTextArea;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class PublisherClientUI {
 
@@ -53,12 +55,42 @@ public class PublisherClientUI {
 		frmPublisherClient.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmPublisherClient.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
+		messageButton1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		frmPublisherClient.getContentPane().add(messageButton1);
+		
+		messageButton2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		frmPublisherClient.getContentPane().add(messageButton2);
+		
+		messageButton3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		frmPublisherClient.getContentPane().add(messageButton3);
+		
+		messageButton4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		frmPublisherClient.getContentPane().add(messageButton4);
+		
+		messageButton5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		frmPublisherClient.getContentPane().add(messageButton5);
+		
+		messageButton6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		frmPublisherClient.getContentPane().add(messageButton6);
+		
 		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
 		flowLayout.setVgap(10);
 		flowLayout.setHgap(10);

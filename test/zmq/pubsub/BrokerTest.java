@@ -125,7 +125,6 @@ public class BrokerTest {
 		try {
 			broker = new Broker(pubSubBrokerJsonFilename);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		assertNotNull(broker);
@@ -216,7 +215,7 @@ public class BrokerTest {
 		String [] args = {};
 		
 		//Broker.main(args);
-		fail("Not yet implemented"); // TODO
+		fail("Not yet implemented");
 	}
     */
 	

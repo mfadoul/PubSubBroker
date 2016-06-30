@@ -43,7 +43,6 @@ public class MessageMapJson extends MessageMap {
 	
 			jsonReader.endObject();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
