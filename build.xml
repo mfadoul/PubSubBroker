@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="PubSubBroker">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="/MyApps/eclipse-mars/Eclipse.app/Contents/Eclipse"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.7"/>
+    <property name="source" value="1.7"/>
+    <path id="JUnit 4.libraryclasspath">
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.junit_4.12.0.v201504281640/junit.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.hamcrest.core_1.3.0.v201303031735.jar"/>
+    </path>
+    <path id="PubSubBroker.classpath">
+        <pathelement location="bin"/>
+        <path refid="JUnit 4.libraryclasspath"/>
+        <pathelement location="/usr/local/share/java/zmq.jar"/>
+        <pathelement location="/usr/local/lib"/>
+        <pathelement location="/usr/local/share/java/gson-2.3.1.jar"/>
+        <pathelement location="jgoodies-forms-1.8.0.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="test">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="examples">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <src path="test"/>
+            <src path="examples"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="Broker (With Default JSON)">
+        <java classname="zmq.pubsub.Broker" failonerror="true" fork="yes">
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </java>
+    </target>
+    <target name="Broker (With Default Ports)">
+        <java classname="zmq.pubsub.Broker" failonerror="true" fork="yes">
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
+            <arg line="6000 6001"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </java>
+    </target>
+    <target name="BrokerTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="zmq.pubsub.BrokerTest" todir="${junit.output.dir}"/>
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </junit>
+    </target>
+    <target name="BrokerUI">
+        <java classname="zmq.pubsub.ui.BrokerUI" failonerror="true" fork="yes">
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </java>
+    </target>
+    <target name="MessageMapJsonTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="zmq.pubsub.message.MessageMapJsonTest" todir="${junit.output.dir}"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </junit>
+    </target>
+    <target name="MessageMapTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="zmq.pubsub.message.MessageMapTest" todir="${junit.output.dir}"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </junit>
+    </target>
+    <target name="PublisherClientUI">
+        <java classname="zmq.pubsub.ui.PublisherClientUI" failonerror="true" fork="yes">
+            <classpath refid="PubSubBroker.classpath"/>
+        </java>
+    </target>
+    <target name="PubSubBroker">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="zmq.pubsub.BrokerTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.configuration.PubSubBrokerConfigurationJsonTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.configuration.PubSubBrokerConfigurationXmlTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.message.MessageMapJsonTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.message.MessageMapTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.subscriber.SubscriberClientJsonTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.subscriber.SubscriberClientTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.subscriber.SubscriberDataBuilderTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.subscriber.SubscriberDataTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.test.PubSubBrokerConfigurationTests" todir="${junit.output.dir}"/>
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </junit>
+    </target>
+    <target name="PubSubBrokerConfigurationJsonTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="zmq.pubsub.configuration.PubSubBrokerConfigurationJsonTest" todir="${junit.output.dir}"/>
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </junit>
+    </target>
+    <target name="PubSubBrokerConfigurationTests">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="zmq.pubsub.test.PubSubBrokerConfigurationTests" todir="${junit.output.dir}"/>
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </junit>
+    </target>
+    <target name="PubSubBrokerConfigurationXmlTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="zmq.pubsub.configuration.PubSubBrokerConfigurationXmlTest" todir="${junit.output.dir}"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </junit>
+    </target>
+    <target name="SimpleMessageMapJsonTest">
+        <java classname="zmq.pubsub.simpletest.SimpleMessageMapJsonTest" failonerror="true" fork="yes">
+            <classpath refid="PubSubBroker.classpath"/>
+        </java>
+    </target>
+    <target name="SimplePublisherTest (1)">
+        <java classname="zmq.pubsub.simpletest.SimplePublisherTest" failonerror="true" fork="yes">
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </java>
+    </target>
+    <target name="SimplePubSubBrokerConfigurationJsonTest">
+        <java classname="zmq.pubsub.simpletest.SimplePubSubBrokerConfigurationJsonTest" failonerror="true" fork="yes">
+            <classpath refid="PubSubBroker.classpath"/>
+        </java>
+    </target>
+    <target name="SimpleSubscriberTest (1)">
+        <java classname="zmq.pubsub.simpletest.SimpleSubscriberTest" failonerror="true" fork="yes">
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </java>
+    </target>
+    <target name="SubscriberClientJsonTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="zmq.pubsub.subscriber.SubscriberClientJsonTest" todir="${junit.output.dir}"/>
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </junit>
+    </target>
+    <target name="SubscriberClientTest (1)">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="zmq.pubsub.subscriber.SubscriberClientTest" todir="${junit.output.dir}"/>
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </junit>
+    </target>
+    <target name="SubscriberClientUI">
+        <java classname="zmq.pubsub.ui.SubscriberClientUI" failonerror="true" fork="yes">
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </java>
+    </target>
+    <target name="SubscriberDataBuilderTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="zmq.pubsub.subscriber.SubscriberDataBuilderTest" todir="${junit.output.dir}"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </junit>
+    </target>
+    <target name="SubscriberDataTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="zmq.pubsub.subscriber.SubscriberDataTest" todir="${junit.output.dir}"/>
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </junit>
+    </target>
+    <target name="test">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="zmq.pubsub.BrokerTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.configuration.PubSubBrokerConfigurationJsonTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.configuration.PubSubBrokerConfigurationXmlTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.message.MessageMapJsonTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.message.MessageMapTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.subscriber.SubscriberClientJsonTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.subscriber.SubscriberClientTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.subscriber.SubscriberDataBuilderTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.subscriber.SubscriberDataTest" todir="${junit.output.dir}"/>
+            <test name="zmq.pubsub.test.PubSubBrokerConfigurationTests" todir="${junit.output.dir}"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </junit>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>
