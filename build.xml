@@ -196,15 +196,6 @@
             <classpath refid="PubSubBroker.classpath"/>
         </junit>
     </target>
-    <target name="SubscriberClientTest (1)">
-        <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <test name="zmq.pubsub.subscriber.SubscriberClientTest" todir="${junit.output.dir}"/>
-            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
-            <classpath refid="PubSubBroker.classpath"/>
-        </junit>
-    </target>
     <target name="SubscriberClientUI">
         <java classname="zmq.pubsub.ui.SubscriberClientUI" failonerror="true" fork="yes">
             <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
@@ -242,6 +233,16 @@
             <test name="zmq.pubsub.subscriber.SubscriberDataBuilderTest" todir="${junit.output.dir}"/>
             <test name="zmq.pubsub.subscriber.SubscriberDataTest" todir="${junit.output.dir}"/>
             <test name="zmq.pubsub.test.PubSubBrokerConfigurationTests" todir="${junit.output.dir}"/>
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
+            <classpath refid="PubSubBroker.classpath"/>
+        </junit>
+    </target>
+    <target name="SubscriberClientTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="zmq.pubsub.subscriber.SubscriberClientTest" todir="${junit.output.dir}"/>
+            <env key="DYLD_LIBRARY_PATH" value="/usr/local/lib"/>
             <classpath refid="PubSubBroker.classpath"/>
         </junit>
     </target>
